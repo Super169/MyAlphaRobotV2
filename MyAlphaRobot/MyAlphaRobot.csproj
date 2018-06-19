@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CB78752D-9A70-4B55-A7B5-BD7514A98CC2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>MyAlphaRobot</RootNamespace>
+    <AssemblyName>MyAlphaRobot</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>images\alpha1s_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ionic.Zip.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Dynamic" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="data\BoardConfig.cs" />
+    <Compile Include="data\ComboInfo.cs" />
+    <Compile Include="data\ComboItem.cs" />
+    <Compile Include="data\ComboTable.cs" />
+    <Compile Include="system\SYSTEM.cs" />
+    <Compile Include="MainWindow_BoardConfig.cs" />
+    <Compile Include="MainWindow_ServoMaintenance.cs" />
+    <Compile Include="Stm8\Stm8HexData.cs" />
+    <Compile Include="Stm8\Stm8SendData.cs" />
+    <Compile Include="uc\UcComboDisplay.xaml.cs">
+      <DependentUpon>UcComboDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcComboDetail.xaml.cs">
+      <DependentUpon>UcComboDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcComboEdit.xaml.cs">
+      <DependentUpon>UcComboEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UTIL.FILE.cs" />
+    <Compile Include="MainWindow_Config.cs" />
+    <Compile Include="system\CONST.cs" />
+    <Compile Include="data\ActionInfo.cs" />
+    <Compile Include="data\ActionTable.cs" />
+    <Compile Include="data\PoseInfo.cs" />
+    <Compile Include="MainWindow_ActionTableReadWrite.cs" />
+    <Compile Include="MainWindow_Timer.cs" />
+    <Compile Include="MainWindow_UBT.cs" />
+    <Compile Include="data\ServoInfo.cs" />
+    <Compile Include="system\ConfigObject.cs" />
+    <Compile Include="system\SystemConfig.cs" />
+    <Compile Include="UBTController.cs" />
+    <Compile Include="UBTController.V2.cs" />
+    <Compile Include="uc\UcRobotMaintenance.xaml.cs">
+      <DependentUpon>UcRobotMaintenance.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcServoMain.xaml.cs">
+      <DependentUpon>UcServoMain.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcActionDetail.xaml.cs">
+      <DependentUpon>UcActionDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcActionList.xaml.cs">
+      <DependentUpon>UcActionList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcComboList.xaml.cs">
+      <DependentUpon>UcComboList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcServo.xaml.cs">
+      <DependentUpon>UcServo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UTIL.cs" />
+    <Compile Include="Stm8\WinStm8Writer.Writer.cs" />
+    <Compile Include="Stm8\WinStm8Writer.Serial.cs" />
+    <Compile Include="Stm8\WinStm8Writer.xaml.cs">
+      <DependentUpon>WinStm8Writer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UTIL.INPUT.cs" />
+    <Compile Include="UTIL.SERIAL.cs" />
+    <Compile Include="win\WinRobotMaintenance.xaml.cs">
+      <DependentUpon>WinRobotMaintenance.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="uc\UcComboDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcComboDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcComboEdit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcRobotMaintenance.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcServoMain.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcActionDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcActionList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcComboList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcServo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Stm8\WinStm8Writer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="win\WinRobotMaintenance.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainWindow_Core.cs" />
+    <Compile Include="MainWindow_EventHandler.cs" />
+    <Compile Include="MainWindow_SerialPort.cs" />
+    <Compile Include="MainWindow_Utilities.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Config\System.json" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\alpha1s.png" />
+    <Resource Include="images\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\alpha1s_15.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\alpha1s_300x450.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\alpha1s_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Alpha1s_Icon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

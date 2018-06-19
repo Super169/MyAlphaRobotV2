@@ -1,0 +1,267 @@
+﻿<UserControl x:Class="MyAlphaRobot.uc.UcActionDetail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyAlphaRobot.uc"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="800">
+    <Grid>
+        <ListView x:Name="lvActionDetail" FontSize="13" Background="LightGoldenrodYellow" Margin="0,-1,0,1" MouseDoubleClick="ListView_MouseDoubleClick">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+
+                    <GridViewColumn >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding enabled}" Checked="Enable_Changed" Unchecked="Enable_Changed" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="序号" Width="40" DisplayMemberBinding="{Binding poseId}"/>
+
+                    <GridViewColumn Header="执行时间" Width="60" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding servoTime}" TextAlignment="Right" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="完成(ms)" Width="60" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding waitTime}" TextAlignment="Right" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="头灯" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED00}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="" HorizontalContentAlignment="Center"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+
+                    <!--
+                    <GridViewColumn Header="s01" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED01}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s01}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s02" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED02}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s02}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s03" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED03}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s03}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+
+                    <GridViewColumn Header="s04" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED04}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s04}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s05" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED05}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s05}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s06" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED06}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s06}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s07" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED07}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s07}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s08" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED08}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s08}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s09" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED09}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s09}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s10" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED10}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s10}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s11" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED11}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s11}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s12" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED12}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s12}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s13" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED13}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s13}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s14" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED14}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s14}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s15" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED15}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s15}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s16" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED16}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s16}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s17" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED17}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s17}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s18" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED18}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s18}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s19" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED19}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s19}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="s20" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="{Binding Path=LED20}" Margin="-5,0,-5,0">
+                                    <Label Margin="0,0,0,0" Content="{Binding Path=s20}" HorizontalContentAlignment="Right"></Label>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="音效播放" Width="80" DisplayMemberBinding="{Binding mp3DispInfo}" />
+                    <GridViewColumn Header="音量" Width="35" DisplayMemberBinding="{Binding mp3DispVol}" />
+                    
+-->
+
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

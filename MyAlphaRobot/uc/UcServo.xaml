@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="MyAlphaRobot.uc.UcServo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyAlphaRobot.uc"
+             mc:Ignorable="d" 
+             d:DesignHeight="38" d:DesignWidth="38" Background="Transparent">
+    <Grid>
+        <Ellipse x:Name="eControl" Fill="Red" HorizontalAlignment="Left" Height="38" Stroke="Black" VerticalAlignment="Top" Width="38" Margin="0,0,0,0"  MouseDown="ucMouseDown" StrokeThickness="2"/>
+        <Label x:Name="lblAngle" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="7,9,0,0" VerticalAlignment="Top" Height="17" Width="24"   MouseDown="ucMouseDown" Content="888" Panel.ZIndex="1" Padding="0,0,0,0" FontSize="14"/>
+        <Rectangle x:Name="rLED"  HorizontalAlignment="Left" Fill="GreenYellow" Height="7" Margin="12,26,0,0" Stroke="Black" VerticalAlignment="Top" Width="13" Panel.ZIndex="1"  MouseDown="ucMouseDown"/>
+    </Grid>
+</UserControl>

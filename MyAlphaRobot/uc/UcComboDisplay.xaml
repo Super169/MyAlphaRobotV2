@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="MyAlphaRobot.uc.UcComboDisplay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyAlphaRobot"
+             xmlns:uc="clr-namespace:MyAlphaRobot.uc" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <uc:UcComboList x:Name="ucComboList" Margin="0,0,0,0" SelectionChanged="ucComboList_SelectionChanged"/>
+        </Grid>
+        <Grid Grid.Column="1">
+            <uc:UcComboDetail x:Name="ucComboDetail" Margin="0,0,0,0" SelectionChanged="ucComboDetail_SelectionChanged" />
+        </Grid>
+        <Grid Grid.Column="2">
+            <uc:UcComboEdit x:Name="ucComboEdit" Margin="0,0,0,0" />
+        </Grid>
+    </Grid>
+</UserControl>
