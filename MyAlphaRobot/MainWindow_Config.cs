@@ -13,43 +13,84 @@ namespace MyAlphaRobot
 {
     public partial class MainWindow : Window
     {
+        /*
         private void InitConfig()
         {
-            SystemConfig sc = UTIL.FILE.RestoreConfig<SystemConfig>(CONST.CONFIG_FILE, false);
-            if (Object.ReferenceEquals(sc, null))
+            SYSTEM.configPath = MyUtil.FILE.AppFilePath(CONST.CONFIG_FOLDER);
+            SYSTEM.systemConfigFile = Path.Combine(SYSTEM.configPath, CONST.SYSTEM_CONFIG);
+
+            SYSTEM.sc = MyUtil.FILE.RestoreDataFile<SystemConfig>(SYSTEM.systemConfigFile, CONST.SYSTEM_CONFIG_ZIP);
+            if (Object.ReferenceEquals(SYSTEM.sc, null))
             {
-                sc = new SystemConfig()
+                SYSTEM.sc = new SystemConfig()
                 {
-                    robotConfig = CONST.DEFAULT_ROBOT_CONFIG
+                    robotConfigFile = CONST.DEFAULT_CONFIG.ROBOT_CONFIG_FILE,
+                    blocklyPath = CONST.DEFAULT_CONFIG.BLOCKLY_PATH,
+                    autoCheckVersion = CONST.DEFAULT_CONFIG.AUTO_CHECK_VERSION,
+                    autoCheckFirmware = CONST.DEFAULT_CONFIG.AUTO_CHECK_FIRMWARE,
+                    developerMode = CONST.DEFAULT_CONFIG.DEVEOPER_MODE
                 };
-            }
-
-            if (!File.Exists(UTIL.FILE.GetConfigFileFullName(CONST.CONFIG_FILE)))
+            } else
             {
-                UTIL.FILE.SaveConfig(sc, CONST.CONFIG_FILE, false);
+                if (SYSTEM.sc.robotConfigFile == null) SYSTEM.sc.robotConfigFile = CONST.DEFAULT_CONFIG.ROBOT_CONFIG_FILE;
+                if (SYSTEM.sc.blocklyPath == null) SYSTEM.sc.blocklyPath = CONST.DEFAULT_CONFIG.BLOCKLY_PATH;
             }
 
-            bool configReady = false;
-            string fullName = UTIL.FILE.GetConfigFileFullName(sc.robotConfig);
-            if (File.Exists(fullName))
+            #region "Version Config"
+
+            SYSTEM.versionChecked = false;
+            if (SYSTEM.sc.autoCheckVersion)
+            {
+
+            }
+
+            if (SYSTEM.sc.autoCheckFirmware)
+            {
+                Util.CheckFirmware();
+            }
+            else
+            {
+                SYSTEM.firmwareChecked = false;
+            }
+
+            #endregion
+
+
+            #region "Get Robot Config"
+
+            if (!File.Exists(SYSTEM.systemConfigFile))
+            {
+                MyUtil.FILE.SaveDataFile(SYSTEM.sc, SYSTEM.systemConfigFile, CONST.SYSTEM_CONFIG_ZIP);
+            }
+
+            bool robotConfigReady = false;
+            string robotConfigFile = Path.Combine(SYSTEM.configPath, SYSTEM.sc.robotConfigFile);
+            if (File.Exists(robotConfigFile))
             {
                 try
                 {
-                    SYSTEM.configObject = ConfigObject.FromFile(fullName);
-                    configReady = true;
-                    SYSTEM.robotConfig = sc.robotConfig;
+                    SYSTEM.configObject = ConfigObject.FromFile(robotConfigFile);
+                    robotConfigReady = true;
                 }
                 catch { }
             }
 
-            if ((!configReady) || (Object.ReferenceEquals(SYSTEM.configObject, null)))
+            if ((!robotConfigReady) || (Object.ReferenceEquals(SYSTEM.configObject, null)))
             {
-                SYSTEM.robotConfig = "";
                 SYSTEM.configObject = DefaultConfig();
             }
             CONST.MAX_SERVO = SYSTEM.configObject.max_servo;
-        }
 
+            #endregion
+
+            if (!File.Exists(Path.Combine(SYSTEM.sc.blocklyPath, CONST.BLOCKLY.CHECK_FILE)))
+            {
+                SYSTEM.sc.blocklyPath = "";
+            }
+
+            Util.SaveSystemConfig();
+
+        }
 
         public ConfigObject DefaultConfig()
         {
@@ -62,7 +103,7 @@ namespace MyAlphaRobot
                                                 };
 
             ConfigObject co = new ConfigObject();
-            co.max_servo = 20;
+            co.max_servo = 16;
             co.servos = new List<Point>();
             for (int i = 0; i < co.max_servo; i++)
             {
@@ -72,6 +113,7 @@ namespace MyAlphaRobot
             co.appResource = true;
             return co;
         }
+        */
 
         public ImageBrush loadImage(ConfigObject co)
         {

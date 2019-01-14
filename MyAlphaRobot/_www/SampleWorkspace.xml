@@ -1,0 +1,148 @@
+<xml xmlns="http://www.w3.org/1999/xhtml" id="workspaceBlocks" style="display:none">
+  <block type="status_idle" id="#w34V6CrtE9PyH4GQ.d," deletable="false" movable="false" x="0" y="0">
+    <next>
+      <block type="event_handler" id="~QLV5Z-B:z|Z^p4o2d[w">
+        <value name="condition">
+          <block type="cond_mpu6050" id="jcEuzvh%2}`N)1IP%{q`">
+            <field name="axis">2</field>
+            <field name="axis_check">3</field>
+            <field name="axis_value">-14400</field>
+          </block>
+        </value>
+        <value name="action">
+          <block type="action_play_action" id="x[=4x$b:[LagjbEiwwKl">
+            <field name="action_id">5</field>
+          </block>
+        </value>
+        <next>
+          <block type="event_handler" id="do_+5?%2kHir-NuE(=^6">
+            <value name="condition">
+              <block type="cond_mpu6050" id="WZtgyJv-2}@.9m!+*Eaq">
+                <field name="axis">2</field>
+                <field name="axis_check">2</field>
+                <field name="axis_value">14400</field>
+              </block>
+            </value>
+            <value name="action">
+              <block type="action_play_action" id="J;ym1t+NfZ!^i~E}Pp`u">
+                <field name="action_id">6</field>
+              </block>
+            </value>
+            <next>
+              <block type="event_handler" id="VQ#5cQ+W0p=PpJ4%FV+p">
+                <value name="condition">
+                  <block type="cond_touch" id="$95T#Nl52Od:EH81,%~W">
+                    <field name="touch_status">1</field>
+                  </block>
+                </value>
+                <value name="action">
+                  <block type="action_play_action" id="q}lnPTVEspe,mU#aQse-">
+                    <field name="action_id">11</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="event_handler" id="_LQ+sf/_zP}v`j*_Ebqw">
+                    <value name="condition">
+                      <block type="cond_touch" id="Kp8y0EOZpG(GV@YHfk/X">
+                        <field name="touch_status">2</field>
+                      </block>
+                    </value>
+                    <value name="action">
+                      <block type="action_play_action" id="JmVf^GB:Acn33B=n]Z/u">
+                        <field name="action_id">12</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="event_handler" id="n])T(Owb_Z-Tf634,*T+">
+                        <value name="condition">
+                          <block type="cond_touch" id="~RbrxtQ50E29y385s9Ob">
+                            <field name="touch_status">3</field>
+                          </block>
+                        </value>
+                        <value name="action">
+                          <block type="action_play_action" id="nC8|tJu6uXx0mRfRKFEV">
+                            <field name="action_id">13</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="event_handler" id="tDUOx67^pRG7ea4C.iYA">
+                            <value name="condition">
+                              <block type="cond_touch" id="-Z7q[sO^VyNn*nduZ,#p">
+                                <field name="touch_status">4</field>
+                              </block>
+                            </value>
+                            <value name="action">
+                              <block type="action_play_action" id=",r[*LOAX4D@(!3TfB|So">
+                                <field name="action_id">14</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="event_handler" id="|IYm7bqxTPYP*|(5zrve">
+                                <value name="condition">
+                                  <block type="cond_battery_level" id="FrU0#nWkW?Q*pzM40*B,">
+                                    <field name="battery_level">10</field>
+                                  </block>
+                                </value>
+                                <value name="action">
+                                  <block type="action_mp3_play_mp3" id="^iTkpj_%ADMtq{bL-;Lu">
+                                    <field name="mp3_file">2</field>
+                                  </block>
+                                </value>
+                                <next>
+                                  <block type="event_handler" id="p8.5uB~O!/uf7r(LwSu(">
+                                    <value name="condition">
+                                      <block type="cond_battery_level" id="wB[.4:N@WA%}2Y!O%.K*">
+                                        <field name="battery_level">30</field>
+                                      </block>
+                                    </value>
+                                    <value name="action">
+                                      <block type="action_mp3_play_mp3" id="%wTZWun^;[2`k;40opJC">
+                                        <field name="mp3_file">3</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+  <block type="status_playing" id="ZfivkurpQ^}I|rS:^MA)" deletable="false" movable="false" x="400" y="0">
+    <next>
+      <block type="event_handler" id="SyJ~;qL{^Df#KxfG;6GP">
+        <value name="condition">
+          <block type="cond_battery_level" id="h@$P5qdrOnr[~X+dk8Q3">
+            <field name="battery_level">10</field>
+          </block>
+        </value>
+        <value name="action">
+          <block type="action_stop_action" id="]d.?0,{QdTmW0cwRd9-e"></block>
+        </value>
+        <next>
+          <block type="event_handler" id="4j5M4ByTeR)/br|P7:@A">
+            <value name="condition">
+              <block type="cond_battery_level" id="5/O!S|1yE9f9~Fw|yQD;">
+                <field name="battery_level">30</field>
+              </block>
+            </value>
+            <value name="action">
+              <block type="action_mp3_play_mp3" id="r:ZB*cZ6e)l1soW5g`wG">
+                <field name="mp3_file">3</field>
+              </block>
+            </value>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>

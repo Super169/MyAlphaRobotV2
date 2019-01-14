@@ -25,8 +25,10 @@ namespace MyAlphaRobot
     /// </summary>
     public partial class WinStm8Writer : Window
     {
+        byte[] enterTTL = { 0xA9, 0x9A, 0x04, 0x07, 0x00, 0x01, 0x0C, 0xED };
+        byte[] exitTTL = { 0xA9, 0x9A, 0x01, 0x06, 0x09 };
 
-        private void UpdateInfo(string msg = "", UTIL.InfoType iType = UTIL.InfoType.message, bool async = false)
+        private void UpdateInfo(string msg = "", MyUtil.UTIL.InfoType iType = MyUtil.UTIL.InfoType.message, bool async = false)
         {
             if (Dispatcher.FromThread(Thread.CurrentThread) == null)
             {
@@ -48,13 +50,13 @@ namespace MyAlphaRobot
             // Update UI is allowed here
             switch (iType)
             {
-                case UTIL.InfoType.message:
+                case MyUtil.UTIL.InfoType.message:
                     statusBar.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x7A, 0xCC));
                     break;
-                case UTIL.InfoType.alert:
+                case MyUtil.UTIL.InfoType.alert:
                     statusBar.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xCA, 0x51, 0x00));
                     break;
-                case UTIL.InfoType.error:
+                case MyUtil.UTIL.InfoType.error:
                     statusBar.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x00, 0x00));
                     break;
 
@@ -81,7 +83,11 @@ namespace MyAlphaRobot
                 }
                 TBurn.Abort();
             }
-            if (serialPort.IsOpen) serialPort.Close();
+            if (serialPort.IsOpen)
+            {
+                serialPort.Write(exitTTL, 0, exitTTL.Length);
+                serialPort.Close();
+            }
         }
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
@@ -94,10 +100,11 @@ namespace MyAlphaRobot
             UpdateInfo();
             if (serialPort.IsOpen)
             {
+                serialPort.Write(exitTTL, 0, exitTTL.Length);
                 serialPort.Close();
                 if (serialPort.IsOpen)
                 {
-                    UpdateInfo("Fail to close connection", UTIL.InfoType.error);
+                    UpdateInfo("Fail to close connection", MyUtil.UTIL.InfoType.error);
                 }
                 else
                 {
@@ -109,20 +116,30 @@ namespace MyAlphaRobot
                 string portName = (string)cboPorts.SelectedValue;
                 if (portName == "")
                 {
-                    UpdateInfo("No port selected", UTIL.InfoType.error);
+                    UpdateInfo("No port selected", MyUtil.UTIL.InfoType.error);
                     return;
                 }
-                if (UTIL.SERIAL.Connect(serialPort, portName))
+                if (Util.SERIAL.Connect(serialPort, portName))
                 {
                     UpdateInfo(String.Format("Connected to {0} in 115200, N, 8, 1", portName));
                 }
+            }
+            if (serialPort.IsOpen)
+            {
+                // Send command to enter USB-TTL mode, and clear receive buffer
+                // A9 9A 04 07 00 01 0C ED
+                enterTTL[5] = (byte)cboGPIO.SelectedIndex;
+                enterTTL[6] = (byte) (0x0B + enterTTL[5]);
+                serialPort.Write(enterTTL, 0, enterTTL.Length);
+                Thread.Sleep(1000);
+                receiveBuffer.Clear();
             }
             SetStatus();
         }
 
         private void FindSerial(string defaultPort)
         {
-            int nPorts = UTIL.SERIAL.FindPorts((string)cboPorts.SelectedValue, cboPorts);
+            int nPorts = Util.SERIAL.FindPorts((string)cboPorts.SelectedValue, cboPorts, 250);
             UpdateInfo(String.Format("{0} serial port{1} found", (nPorts > 0 ? nPorts.ToString() : "No"), (nPorts > 1 ? "s" : "")));
             SetStatus();
         }
@@ -152,7 +169,7 @@ namespace MyAlphaRobot
                 }
                 else
                 {
-                    UpdateInfo(String.Format("Fail reading {0}", fileName), UTIL.InfoType.error);
+                    UpdateInfo(String.Format("Fail reading {0}", fileName), MyUtil.UTIL.InfoType.error);
                 }
                 SetStatus();
             }

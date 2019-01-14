@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -49,16 +50,40 @@ namespace MyAlphaRobot
         private void hiResDisplayMenuItem_Click(object sender, RoutedEventArgs e)
         {
             wrapMain.Width = 300;
-            UTIL.WriteRegistry(UTIL.KEY.LAST_LAYOUT, "HIGH");
+            MyUtil.UTIL.WriteRegistry(REGKEY.LAST_LAYOUT, "HIGH");
         }
 
         private void lowResDisplayMenuItem_Click(object sender, RoutedEventArgs e)
         {
             wrapMain.Width = 600;
-            UTIL.WriteRegistry(UTIL.KEY.LAST_LAYOUT, "LOW");
+            MyUtil.UTIL.WriteRegistry(REGKEY.LAST_LAYOUT, "LOW");
         }
 
-        private void configRobotMenuItem_Click(object sender, RoutedEventArgs e)
+
+        private void miSystemConfig_Click(object sender, RoutedEventArgs e)
+        {
+            WinSystemConfig win = new WinSystemConfig();
+            win.Owner = this;
+            win.ShowDialog();
+            win = null;
+            ucControlBoard.SetDeveloperMode();
+            if (SYSTEM.sc.disableBatteryUpdate)
+            {
+                ClearBattery();
+            } else
+            {
+                UpdateBattery();
+            }
+            if (SYSTEM.sc.disableMpuUpdate)
+            {
+                ClearMpu();
+            } else
+            {
+                UpdateMpu();
+            }
+        }
+
+        private void miConfigRobot_Click(object sender, RoutedEventArgs e)
         {
             ConfigRobot();
         }
@@ -73,7 +98,16 @@ namespace MyAlphaRobot
 
         }
 
-        private void stm8WriterMenuItem_Click(object sender, RoutedEventArgs e)
+
+        private void miFirmwareUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            WinFirmwareUpdate win = new WinFirmwareUpdate();
+            win.Owner = this;
+            win.ShowDialog();
+            win = null;
+        }
+
+        private void miStm8Writer_Click(object sender, RoutedEventArgs e)
         {
             WinStm8Writer win = new WinStm8Writer();
             win.Owner = this;
@@ -81,95 +115,35 @@ namespace MyAlphaRobot
             win = null;
         }
 
-
-        private void saveConfigMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            SaveActionFile();
-        }
-
-        private void loadConfigMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            LoadActionFile();
-        }
-
         #endregion
 
 
         #region Button Event Handler
 
-        private void connectButton_Click(object sender, RoutedEventArgs e)
+        private void btnSerialConnect_Click(object sender, RoutedEventArgs e)
         {
-            Mouse.OverrideCursor = Cursors.Wait;
-            UpdateInfo();
-            batteryTimer.Stop();
-            if (UBT.connected)
+            ToggleConnection(CONN_MODE.Serial);
+        }
+
+        private void btnNetConnect_Click(object sender, RoutedEventArgs e)
+        {
+            bool ready = false;
+            string ip = txtIP.Text.Trim();
+            if (ip != "") 
             {
-                if (UBT.Disconnect())
+                if (ip.Split(new[] { "." }, StringSplitOptions.None).Count() == 4)
                 {
-                    // ucComboDisplay.Refresh();
-                    ucActionList.Refresh();
-                    ucActionDetail.Refresh();
-                    RefreshBoardConfig();
+                    IPAddress address;
+                    ready = (IPAddress.TryParse(ip, out address));
                 }
             }
-            else
+
+            if (!ready)
             {
-                if (UBT.Connect(portsComboBox.Text))
-                {
-                    UTIL.WriteRegistry(UTIL.KEY.LAST_CONNECTION, portsComboBox.Text);
-                    // ucComboDisplay.Refresh();
-                    ucActionList.Refresh();
-                    RefreshBoardConfig();
-                }
+                MessageBox.Show("请输入一个合法的网路地址(IP address)", "网路地址错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
-            if (UBT.connected)
-            {
-                byte mode;
-                string ssid, ip;
-                UInt16 port;
-                if (UBT.GetNetwork(out mode, out ssid, out ip, out port))
-                {
-                    if (mode == 0)
-                    {
-                        lblSSID.Foreground = Brushes.Red;
-                        lblSSID.Content = "No Network";
-                        lblIP.Content = "";
-                    } else
-                    {
-                        lblSSID.Content = ssid;
-                        lblIP.Content = String.Format("{0}:{1}", ip, port);
-                        switch (mode)
-                        {
-                            case 1:
-                                lblSSID.Foreground = Brushes.LightBlue;
-                                break;
-                            case 2:
-                                lblSSID.Foreground = Brushes.LightPink;
-                                break;
-                            default:
-                                lblSSID.Foreground = Brushes.Red;
-                                break;
-                        }
-                    }
-                } else
-                {
-                    lblSSID.Foreground = Brushes.Red;
-                    lblSSID.Content = "Unknown Network";
-                    lblIP.Content = "";
-                }
-                UpdateBattery();
-                batteryTimer.Start();
-            }
-            SetStatus();
-            Mouse.OverrideCursor = null;
-            // TODO: check servo setting
-            if (UBT.connected)
-            {
-                if (SYSTEM.configObject.max_servo != UBT.config.maxServo)
-                {
-                    MessageBox.Show(String.Format("*** 舵机数目不符 ***\n\n上位机设定为: {0}\n主控板设定为: {1}\n舵机数目不符, 系统会出现不正常反应.\n\n请尽快修正错误设定", SYSTEM.configObject.max_servo, UBT.config.maxServo), "上位机跟主控有冲突", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                }
-            }
+            ToggleConnection(CONN_MODE.Network);
         }
 
         private void imgConfigRobot_MouseDown(object sender, MouseEventArgs e)
@@ -180,7 +154,9 @@ namespace MyAlphaRobot
         private void findPortButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateInfo();
-            FindPorts((string)portsComboBox.SelectedValue);
+            // FindPorts((string)portsComboBox.SelectedValue);
+            robot.SetSerialPorts(portsComboBox, (string)portsComboBox.SelectedValue);
+            SetStatus();
         }
 
         private void sendButton_Click(object sender, RoutedEventArgs e)
@@ -293,7 +269,7 @@ namespace MyAlphaRobot
             data.PoseInfo pi = ucActionDetail.GetSelectedPose();
             if (pi == null)
             {
-                UpdateInfo("没有选定姿势", UTIL.InfoType.alert);
+                UpdateInfo("没有选定姿势", MyUtil.UTIL.InfoType.alert);
             }
             else
             {
@@ -428,21 +404,6 @@ namespace MyAlphaRobot
             }
         }
 
-        /*
-        private void btnReadSPIFFS_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateInfo();
-            int actionId = GetSelectedActionId();
-            if (actionId < 0) return;
-            UBT.ReadFromSPIFFS((byte) actionId);
-        }
-
-        private void btnWriteSPIFFS_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateInfo();
-            UBT.WriteToSPIFFS();
-        }
-        */
         private void UpdatePoseInfo(bool allServo)
         {
             UpdateInfo();
@@ -450,7 +411,7 @@ namespace MyAlphaRobot
             data.PoseInfo pi = ucActionDetail.GetSelectedPose();
             if (pi == null)
             {
-                UpdateInfo("没有选定姿势", UTIL.InfoType.alert);
+                UpdateInfo("没有选定姿势", MyUtil.UTIL.InfoType.alert);
                 return;
             }
 
@@ -508,32 +469,32 @@ namespace MyAlphaRobot
 
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            if (UBT.connected) UBT.Disconnect();
+            // if (UBT.connected) UBT.Disconnect();
+            if (robot.isConnected) robot.Close();
         }
 
         #endregion
 
         #region Window Control Event Handler
 
-        private bool checkSliderUpdate = true;
-
         private void sliderActiveAngle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            UpdateInfo();
             Slider sAngle = (Slider)sender;
             lblAngle.Content = Math.Round(sAngle.Value);
-            if (checkSliderUpdate)
+        }
+
+        private void sliderActiveAngle_GotMouseCapture(object sender, MouseEventArgs e)
+        {
+            if (activeServo > 0)
             {
-                // Don't call slider timer directly as servo may still working
-                servoTimer.Stop();
-                servoTimer.Start();
+                sliderMode = 2;
+                sliderTimer.Start();
             }
         }
 
-        private void sliderActiveAngle_MouseUp(object sender, MouseButtonEventArgs e)
+        private void sliderActiveAngle_LostMouseCapture(object sender, MouseEventArgs e)
         {
-            Slider sAngle = (Slider)sender;
-            UpdateInfo(String.Format("Slider mouse Up at {0}", Math.Round(sAngle.Value)));
+            sliderMode = 1;
         }
 
         private void rbLed_Clicked(object sender, RoutedEventArgs e)
@@ -705,12 +666,30 @@ namespace MyAlphaRobot
 
         }
 
+        private void ActionList_CopyToEnd(object sender, EventArgs e)
+        {
+            int actionId;
+            if ((actionId = GetSelectedActionId()) < 0) return; ;
+
+            int poseId;
+            if ((poseId = IsPoseSelected()) < 0) return;
+
+            int newPose = UBT.actionTable.action[actionId].CopyToEnd((UInt16)poseId);
+            if (newPose < 0)
+            {
+                return;
+            }
+            RefreshAction(actionId);
+            ucActionDetail.SetSelectedIndex(newPose);  // just try to set to next one
+
+        }
+
         private int IsPoseSelected()
         {
             int index = ucActionDetail.SelectedIndex;
             if (index < 0)
             {
-                UpdateInfo("请先选择一个姿势", UTIL.InfoType.error);
+                UpdateInfo("请先选择一个姿势", MyUtil.UTIL.InfoType.error);
             }
             return index;
         }
@@ -795,7 +774,6 @@ namespace MyAlphaRobot
         private void SetServoActive(object sender, EventArgs e)
         {
             updating_servo_info = true;
-            // uc.UcServo ucServo = (uc.UcServo)sender;
             uc.UcServo ucServo = (uc.UcServo)sender;
             if ((activeServo > 0) && (activeServo != ucServo.id))
             {
@@ -803,6 +781,7 @@ namespace MyAlphaRobot
             }
             ucServo.SetActive(true);
             activeServo = (ucServo.isActive ? ucServo.id : 0);
+            ucMainServo.SetActiveServo(activeServo);
             UpdateActiveServoInfo();
             updating_servo_info = false;
         }
@@ -810,16 +789,8 @@ namespace MyAlphaRobot
         private void ServoSeletion(object sender, EventArgs e)
         {
             updating_servo_info = true;
-            // uc.UcServo ucServo = (uc.UcServo)sender;
             uc.UcServo ucServo = (uc.UcServo)sender;
-            /*
-            if ((activeServo > 0) && (activeServo != ucServo.id))
-            {
-                servo[activeServo].SetActive(false);
-            }
-            ucServo.SetActive(true);
-            activeServo = (ucServo.isActive ? ucServo.id : 0);
-            */
+
             if (ucServo.isActive)
             {
                 if (rbSelect.IsChecked == true)
@@ -888,19 +859,24 @@ namespace MyAlphaRobot
             UpdateInfo();
             int actionId = ucActionList.GetSelectedActionId();
             if (actionId == -1) return;
-            /*
-            if (!UBT.actionTable.action[actionId].poseLoaded)
-            {
-                Mouse.OverrideCursor = Cursors.Wait;
-                if (!UBT.DownloadAction((byte)actionId, true))
-                {
-                    UpdateInfo(String.Format("下载动作 失败"), Util.InfoType.error);
-                }
-                RefreshActionInfo();
-                Mouse.OverrideCursor = null;
-            }
-            */
             ucActionDetail.Refresh(actionId);
+        }
+
+        private void btnSuspendEventHandler_Click(object sender, RoutedEventArgs e)
+        {
+            SetEventHandler(false);
+        }
+
+        private void btnResumeEventHandler_Click(object sender, RoutedEventArgs e)
+        {
+            SetEventHandler(true);
+        }
+
+        private void SetEventHandler(bool mode)
+        {
+            UBT.SetEventHandlerMode(mode);
+            UBT.CheckEventHandler();
+            UpdateEventHandlerStatus();
         }
     }
 }

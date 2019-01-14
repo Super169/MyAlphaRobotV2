@@ -8,8 +8,22 @@ namespace MyAlphaRobot
 {
     public static class SYSTEM
     {
-        public static string robotConfig { get; set; }
+        public static MainWindow main { get; set; }
+        public static string configPath { get; set; }
+        public static string systemConfigFile { get; set; }
+
+        public static SystemConfig sc { get; set; }
+
+        public static bool versionChecked { get; set; }
+        public static string versionBeta { get; set; }
+        public static string versionRelease { get; set; }
+
+        public static bool firmwareChecked { get; set; }
+        public static string firmwareBeta { get; set; }
+        public static string firmwareRelease { get; set; }
+
         public static ConfigObject configObject { get; set; }
+
 
     }
 }

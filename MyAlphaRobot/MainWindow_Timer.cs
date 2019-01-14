@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -15,74 +10,86 @@ namespace MyAlphaRobot
     public partial class MainWindow : Window
     {
         DispatcherTimer sliderTimer = new DispatcherTimer();
-        DispatcherTimer servoTimer = new DispatcherTimer();
-        DispatcherTimer batteryTimer = new DispatcherTimer();
+        DispatcherTimer backgroundTimer = new DispatcherTimer();
         private delegate void SerialTimerHandler();
-        private long servoEndTicks = 0;
+        private int sliderMode = 0;
+
+        // reduce calculation, put the next ms for comparison
+        private long nextBatteryTicks = 0;
+        private long nextMpuTicks = 0;
+
+        private const int batteryUpdateSec = 10;
+        private const int mpuUpdateSec = 1; 
 
         private void InitTimer()
         {
             sliderTimer.Tick += new EventHandler(sliderTimer_Tick);
-            // prevent frequent update, hold for 500s before udpate servo
-            sliderTimer.Interval = TimeSpan.FromMilliseconds(5);
+            sliderTimer.Interval = TimeSpan.FromMilliseconds(20);
             sliderTimer.Stop();
 
-            // If last move not completed, check every 10ms
-            servoTimer.Tick += new EventHandler(servoTimer_Tick);
-            servoTimer.Interval = TimeSpan.FromMilliseconds(5);
-            servoTimer.Stop();
-
-            // If last move not completed, check every 10ms
-            batteryTimer.Tick += new EventHandler(batteryTimer_Tick);
-            batteryTimer.Interval = TimeSpan.FromSeconds(10);
-            batteryTimer.Stop();
-        }
-
-
-        private void servoTimer_Tick(object sender, EventArgs e)
-        {
-            servoTimer.Stop();
-            if (DateTime.Now.Ticks >= servoEndTicks)
-            {
-                sliderTimer.Stop();
-                sliderTimer.Start();
-            } else
-            {
-                servoTimer.Start();
-            }
+            // If last move not completed, check every second
+            backgroundTimer.Tick += new EventHandler(backgroundTimer_Tick);
+            backgroundTimer.Interval = TimeSpan.FromSeconds(1);
+            backgroundTimer.Stop();
         }
 
         private void sliderTimer_Tick(object sender, EventArgs e)
         {
-            if (activeServo > 0)
+            sliderTimer.Stop();
+
+
+            double dblAngle = Math.Round(sliderActiveAngle.Value);
+            byte angle = (byte) dblAngle;
+            UBT.MoveServo((byte)activeServo, angle, 0);
+            if (sliderMode > 0)
             {
-                sliderTimer.Stop();
-                double dblAngle = Math.Round(sliderActiveAngle.Value);
-                byte angle = (byte) dblAngle;
-                byte oldAngle = servo[activeServo].angle;
-                // if (angle == oldAngle) return;
-                double diff = (byte) Math.Abs(angle - oldAngle);
-                byte time = (byte) (Math.Round(40.0 * diff / CONST.SERVO.MAX_ANGLE));  // 40 ~ 1s, 1s for 240 angle
-                UBT.MoveServo((byte)activeServo, angle, time);
-                int TimeMs = time * 25 + 100;    // add extra 100ms, seeem still not work, sometimes command cannot be executed for fast change.
-                servoEndTicks = DateTime.Now.Ticks + TimeMs * TimeSpan.TicksPerMillisecond;
+                // extra one time after stop
+                if (sliderMode == 1) sliderMode = 0;
+                sliderTimer.Start();
             }
         }
 
-        private void batteryTimer_Tick(object sender, EventArgs e)
+        // Try to put all background communization in single routine
+        private void backgroundTimer_Tick(object sender, EventArgs e)
         {
-            batteryTimer.Stop();
+            backgroundTimer.Stop();
             if (!systemWorking)
             {
-                batteryUpdating = true;
+                backgroundRunning = true;
                 Thread.Sleep(1);
-                if (!systemWorking)
+
+                if (!SYSTEM.sc.disableBatteryUpdate)
                 {
-                    UpdateBattery();
+                    if (DateTime.Now.Ticks > nextBatteryTicks)
+                    {
+                        if (!systemWorking)
+                        {
+                            UpdateBattery();
+                        }
+                        nextBatteryTicks = DateTime.Now.Ticks + batteryUpdateSec * TimeSpan.TicksPerSecond;
+                    }
+                }
+
+                if (!SYSTEM.sc.disableMpuUpdate)
+                {
+                    if (DateTime.Now.Ticks > nextMpuTicks)
+                    {
+                        if (!systemWorking)
+                        {
+                            UpdateMpu();
+                        }
+                        nextMpuTicks = DateTime.Now.Ticks + mpuUpdateSec * TimeSpan.TicksPerSecond;
+                    }
+
                 }
             }
-            batteryUpdating = false;
-            batteryTimer.Start();
+            backgroundRunning = false;
+            backgroundTimer.Start();
+        }
+
+        public void ClearBattery()
+        {
+            UIUpdateBattery(0, 0);
         }
 
         public void UpdateBattery()
@@ -122,8 +129,8 @@ namespace MyAlphaRobot
             if (power > 100) power = 100;
             if (value == 0)
             {
-                lblBattery.Content = "---";
-                lblBatteryValue.Content = "---";
+                lblBattery.Content = "";
+                lblBatteryValue.Content = "";
             } else
             {
                 lblBattery.Content = String.Format("{0}%", power);
@@ -132,20 +139,53 @@ namespace MyAlphaRobot
 
         }
 
-        public void StartSystemWork()
+        public void ClearMpu()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
-            while (batteryUpdating)
+            UIUdateMpu();
+        }
+
+        public void UpdateMpu()
+        {
+            if (!UBT.mpuExists) return;
+            Int16 ax, ay, az;
+            if (UBT.GetMpuData(out ax, out ay, out az))
+            {
+                UIUdateMpu(ax.ToString(), ay.ToString(), az.ToString());
+            } else
+            {
+                UIUdateMpu();
+            }
+        }
+
+        public void UIUdateMpu(string ax = "", string ay = "", string az = "")
+        {
+            if (Dispatcher.FromThread(Thread.CurrentThread) == null)
+            {
+                Application.Current.Dispatcher.BeginInvoke(
+                  System.Windows.Threading.DispatcherPriority.Normal,
+                  (Action)(() => UIUdateMpu(ax, ay, az)));
+                return;
+            }
+            lbl_ax.Content = ax;
+            lbl_ay.Content = ay;
+            lbl_az.Content = az;
+        }
+
+
+        public void StartSystemWork(bool updateUI = true)
+        {
+            if (updateUI) Mouse.OverrideCursor = Cursors.Wait;
+            while (backgroundRunning)
             {
                 Thread.Sleep(1);
             }
             systemWorking = true;
         }
 
-        public void EndSystemWork()
+        public void EndSystemWork(bool updateUI = true)
         {
             systemWorking = false;
-            Mouse.OverrideCursor = null;
+            if (updateUI) Mouse.OverrideCursor = null;
         }
 
     }

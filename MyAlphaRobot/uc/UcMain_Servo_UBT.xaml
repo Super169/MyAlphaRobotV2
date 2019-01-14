@@ -1,0 +1,49 @@
+﻿<local:UcMain_Servo__base x:Class="MyAlphaRobot.uc.UcMain_Servo_UBT"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyAlphaRobot.uc"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300">
+    <Grid x:Name="gridServoFix"  IsEnabled="false" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="140" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="LightYellow" >
+            <Label Content="UBTech 舵机维护" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
+        </Grid>
+        <Grid Grid.Row="1" Background="LightGreen">
+            <Grid  Margin="0,5,0,0">
+                <Label Content="舵机编号:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="tbActiveAdjServoId" HorizontalAlignment="Left" Height="23" Margin="70,2,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30" IsReadOnly="True"/>
+
+                <Label Content="设定舵机角度偏移量:" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Foreground="#FF780505" FontWeight="Bold"/>
+                <TextBox Name="txtAdjAngle" HorizontalAlignment="Left" Height="23" Margin="147,27,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="40" PreviewTextInput="tb_PreviewHex" PreviewKeyDown="tb_PreviewKeyDown_nospace" CharacterCasing="Upper" MaxLength="4" LostFocus="adjAngle_Changed"/>
+                <TextBox Name="txtAdjMsg" Height="23" Margin="192,27,10,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" IsReadOnly="True" Background="LightBlue"/>
+                <Slider Name="sliderAdjValue" Margin="10,55,6,0" VerticalAlignment="Top" Minimum="-304" Maximum="304" ValueChanged="Slider_ValueChanged" />
+                <Label Content="成功设定後, 把舵机移动到" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top"/>
+                <TextBox Name="txtAdjPreview" HorizontalAlignment="Left" Height="23" Margin="160,77,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="34" PreviewTextInput="tb_PreviewInteger" PreviewKeyDown="tb_PreviewKeyDown_nospace" CharacterCasing="Upper" MaxLength="3"/>
+                <Label Content="进行对位." HorizontalAlignment="Left" Margin="200,75,0,0" VerticalAlignment="Top"/>
+                <Button Name="btnReadAdjAngle" Content="读取偏移量" HorizontalAlignment="Left" Margin="17,106,0,0" VerticalAlignment="Top" Width="100" Click="btnReadAdjAngle_Click"/>
+                <Button Name="btnSetAdjAngle" Content="设定偏移量" Margin="0,106,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100" Click="btnSetAdjAngle_Click"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2" Background="OrangeRed">
+            <Grid Margin="0,8,0,0">
+                <Label Content="当前位置为: " HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" />
+                <TextBox Name="txtFixAngle" HorizontalAlignment="Left" Height="23" Margin="83,2,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="26" PreviewTextInput="tb_PreviewInteger" PreviewKeyDown="tb_PreviewKeyDown_nospace" CharacterCasing="Upper" MaxLength="3"/>
+                <Label Content="度, 微调量:" HorizontalAlignment="Left" Margin="109,0,0,0" VerticalAlignment="Top" />
+                <ComboBox x:Name="cboDelta" HorizontalAlignment="Left" Margin="176,2,0,0" VerticalAlignment="Top" Width="40" Height="23">
+                    <ComboBoxItem IsSelected="True">0</ComboBoxItem>
+                    <ComboBoxItem>1</ComboBoxItem>
+                    <ComboBoxItem>2</ComboBoxItem>
+                </ComboBox>
+                <Button Name="btnAutoFixAngle" Content="自动设定" Margin="0,4,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="60" Click="btnAutoFixAngle_Click"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</local:UcMain_Servo__base>

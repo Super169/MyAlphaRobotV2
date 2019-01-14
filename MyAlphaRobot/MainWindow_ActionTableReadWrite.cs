@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using MyUtil;
 
 namespace MyAlphaRobot
 {
@@ -31,7 +32,7 @@ namespace MyAlphaRobot
                     }
                     if (!validFileSize)
                     {
-                        UpdateInfo(String.Format("Invalid file size: {0} has {1} bytes.", fileName, size), UTIL.InfoType.error);
+                        UpdateInfo(String.Format("Invalid file size: {0} has {1} bytes.", fileName, size), MyUtil.UTIL.InfoType.error);
                         return;
                     }
                     FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
@@ -48,12 +49,12 @@ namespace MyAlphaRobot
                     }
                     else
                     {
-                        UpdateInfo(String.Format("Error building table from {0}", fileName), UTIL.InfoType.error);
+                        UpdateInfo(String.Format("Error building table from {0}", fileName), MyUtil.UTIL.InfoType.error);
                     }
                 }
                 catch (Exception ex)
                 {
-                    UpdateInfo(String.Format("Error reading data from {0}: {1}", fileName, ex.Message), UTIL.InfoType.error);
+                    UpdateInfo(String.Format("Error reading data from {0}: {1}", fileName, ex.Message), MyUtil.UTIL.InfoType.error);
                 }
                 RefreshActionInfo();
             }
@@ -90,7 +91,7 @@ namespace MyAlphaRobot
                 }
                 catch (Exception ex)
                 {
-                    UpdateInfo(String.Format("Error saving to {0}: {1}", fileName, ex.Message), UTIL.InfoType.error);
+                    UpdateInfo(String.Format("Error saving to {0}: {1}", fileName, ex.Message), MyUtil.UTIL.InfoType.error);
                 }
             }
 
@@ -113,19 +114,7 @@ namespace MyAlphaRobot
                 EndSystemWork();
             }
         }
-        /*
-        private void UploadActionTable()
-        {
-            if (MessageConfirm("上傳所有動作到機械人, 機械人內所有動作將會被覆蓋.  建議分開動作獨立上傳."))
-            {
-                if (UBT.UploadActionTable())
-                {
-                    UpdateInfo("上傳資料完成");
-                }
-            }
 
-        }
-        */
         private void ConvertAction()
         {
             UpdateInfo();
@@ -143,7 +132,7 @@ namespace MyAlphaRobot
                 if (lName.EndsWith(".hts")) fileType = CONST.UBT_FILE.HTS;
                 if (fileType == CONST.UBT_FILE.UNKNOWN)
                 {
-                    UpdateInfo(String.Format("Invalid file extension {0}", fileName), UTIL.InfoType.error);
+                    UpdateInfo(String.Format("Invalid file extension {0}", fileName), MyUtil.UTIL.InfoType.error);
                     return;
                 }
 
@@ -168,13 +157,13 @@ namespace MyAlphaRobot
                         }
                         else
                         {
-                            UpdateInfo(String.Format("Error building action from {0}", fileName), UTIL.InfoType.error);
+                            UpdateInfo(String.Format("Error building action from {0}", fileName), MyUtil.UTIL.InfoType.error);
                         }
 
                     }
                     catch (Exception ex)
                     {
-                        UpdateInfo(String.Format("Error reading data from {0}: {1}", fileName, ex.Message), UTIL.InfoType.error);
+                        UpdateInfo(String.Format("Error reading data from {0}: {1}", fileName, ex.Message), MyUtil.UTIL.InfoType.error);
                     }
                     RefreshActionInfo();
                 }
@@ -196,7 +185,7 @@ namespace MyAlphaRobot
                 }
                 else
                 {
-                    UpdateInfo(String.Format("下載動作{0} 失敗", actionCode), UTIL.InfoType.error);
+                    UpdateInfo(String.Format("下載動作{0} 失敗", actionCode), MyUtil.UTIL.InfoType.error);
                 }
                 RefreshActionInfo();
                 EndSystemWork();
@@ -220,7 +209,7 @@ namespace MyAlphaRobot
                 }
                 else
                 {
-                    UpdateInfo(String.Format("更新機械人動作{0} 失敗", actionCode), UTIL.InfoType.error);
+                    UpdateInfo(String.Format("更新機械人動作{0} 失敗", actionCode), MyUtil.UTIL.InfoType.error);
                 }
                 EndSystemWork();
             }
@@ -282,7 +271,7 @@ namespace MyAlphaRobot
             int actionId = ucActionList.GetSelectedActionId();
             if (actionId < 0)
             {
-                UpdateInfo("請先選擇動作", UTIL.InfoType.alert);
+                UpdateInfo("請先選擇動作", MyUtil.UTIL.InfoType.alert);
                 return -1;
             }
             return actionId;

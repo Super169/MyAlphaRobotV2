@@ -76,17 +76,17 @@ namespace MyAlphaRobot
 
         public ConfigObject Clone()
         {
-            return UTIL.Clone<ConfigObject>(this);
+            return Util.Clone<ConfigObject>(this);
         }
 
         public bool ToFile(String fileName)
         {
-            return UTIL.FILE.SaveDataFile(this, fileName, true);
+            return MyUtil.FILE.SaveDataFile(this, fileName, true);
         }
 
         public static ConfigObject FromFile(String fileName)
         {
-            return UTIL.FILE.RestoreDataFile<ConfigObject>(fileName, true);
+            return MyUtil.FILE.RestoreDataFile<ConfigObject>(fileName, true);
         }
     }
 }

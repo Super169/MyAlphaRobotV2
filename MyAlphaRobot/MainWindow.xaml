@@ -6,24 +6,20 @@
         xmlns:local="clr-namespace:MyAlphaRobot"
         xmlns:uc="clr-namespace:MyAlphaRobot.uc" x:Class="MyAlphaRobot.MainWindow"
         mc:Ignorable="d"
-        Title="WPFAlphaRobot" Height="1024" Width="1280" MinHeight="600" MinWidth="1024" WindowStartupLocation="CenterScreen">
+        Title="WPFAlphaRobot" Height="1000" Width="1280" MinHeight="600" MinWidth="1024" WindowStartupLocation="CenterScreen">
     <DockPanel x:Name="rootPanel">
         <Menu DockPanel.Dock="Top" x:Name="menuBar" Padding="2">
             <MenuItem Header="文件(_F)">
-                <MenuItem x:Name="configRobotMenuItem" Header="设定机械人(_R)" Click="configRobotMenuItem_Click" />
-                <MenuItem x:Name="stm8WriterMenuItem" Header="STM8 烧录(_W)" Click="stm8WriterMenuItem_Click" />
+                <MenuItem x:Name="miSystemConfig" Header="系统设定(_S)" Click="miSystemConfig_Click" />
+                <MenuItem x:Name="miConfigRobot" Header="设定机械人(_R)" Click="miConfigRobot_Click" />
                 <Separator />
-<!--
-                <MenuItem x:Name="loadConfigMenuItem" Header="读取档案(_L)" Click="loadConfigMenuItem_Click" />
-                <MenuItem x:Name="saveConfigMenuItem" Header="储存档案(_S)" Click="saveConfigMenuItem_Click" />
-                <Separator x:Name="ConfigMenuSeparator" />
--->                
+                <MenuItem x:Name="miFirmwareUpdate" Header="机械人固件烧录(_F)" Click="miFirmwareUpdate_Click" />
+                <MenuItem x:Name="miStm8Writer" Header="STM8 烧录(_W)" Click="miStm8Writer_Click" />
+                <Separator />
                 <MenuItem x:Name="exitMenuItem" Header="退出(_X)" Click="exitMenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="高解像显示" Click="hiResDisplayMenuItem_Click" />
             <MenuItem Header="低解像横向显示" Click="lowResDisplayMenuItem_Click"  />
-
-
         </Menu>
 
         <StatusBar DockPanel.Dock="Bottom" x:Name="statusBar" Background="#FF007ACC" Padding="2">
@@ -37,18 +33,39 @@
                 <RowDefinition Height="*" MinHeight="200" />
                 <RowDefinition Height="30" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Background="Aqua" >
-                <Image x:Name="imgConfigRobot" Source="images/Alpha1s_Icon.png" Margin="10,0,0,0" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" MouseDown="imgConfigRobot_MouseDown"/>
-                <Label Content="Port:" HorizontalAlignment="Left" Margin="45,2,0,0" VerticalAlignment="Top"/>
-                <ComboBox x:Name="portsComboBox" HorizontalAlignment="Left" Margin="80,2,0,0" VerticalAlignment="Top" Width="80"/>
-                <Button x:Name="findPortButton" Content="" HorizontalAlignment="Left" Margin="165,2,0,0" VerticalAlignment="Top" Width="25" Click="findPortButton_Click">
-                    <Button.Background>
-                        <ImageBrush ImageSource="images/refresh.png" />
-                    </Button.Background>
-                </Button>
-                <Button x:Name="connectButton" Content="联机" HorizontalAlignment="Left" Margin="195,0,0,7" VerticalAlignment="Bottom" Width="75" Click="connectButton_Click"/>
-                <TextBox x:Name="tbCommand" Height="25" Margin="333,2,103,0" TextWrapping="NoWrap"  Text="" VerticalAlignment="Top" CharacterCasing="Upper"/>
-                <Button x:Name="sendButton" Content="发送" Margin="0,2,23,0" VerticalAlignment="Top" Click="sendButton_Click" HorizontalAlignment="Right" Width="75"/>
+            <Grid x:Name="gridConnection" Grid.Row="0" Background="Aqua" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="210" />
+                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Image x:Name="imgConfigRobot" Source="images/Alpha1s_Icon.png" Margin="5,0,0,0" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" MouseDown="imgConfigRobot_MouseDown"/>
+                </Grid>
+                <Grid x:Name="gridSerialConnection" Grid.Column="1">
+                    <Label Content="Port:" HorizontalAlignment="Left" Margin="0,2,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <ComboBox x:Name="portsComboBox" HorizontalAlignment="Left" Margin="35,2,0,0" VerticalAlignment="Top" Width="80"/>
+                    <Button x:Name="findPortButton" Content="" HorizontalAlignment="Left" Margin="120,2,0,0" VerticalAlignment="Top" Width="25" Click="findPortButton_Click">
+                        <Button.Background>
+                            <ImageBrush ImageSource="images/refresh.png" />
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="btnSerialConnect" Content="串口联机" HorizontalAlignment="Left" Margin="145,0,0,7" VerticalAlignment="Bottom" Width="60" Click="btnSerialConnect_Click"/>
+                </Grid>
+                <Grid x:Name="gridNetConnection" Grid.Column="2">
+                    <Label Content="IP:" HorizontalAlignment="Left" Margin="0,2,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <TextBox x:Name="txtIP" HorizontalAlignment="Left" Height="20" Margin="25,3,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="105" PreviewTextInput="tb_PreviewIP" PreviewKeyDown="tb_PreviewKeyDown_nospace" MaxLength="15" />
+                    <Label Content=":" HorizontalAlignment="Left" Margin="128,0,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <TextBox Name ="txtPort" HorizontalAlignment="Left" Height="20" Margin="140,3,0,0" TextWrapping="Wrap" Text="6169" VerticalAlignment="Top" Width="40" PreviewTextInput="tb_PreviewInteger" PreviewKeyDown="tb_PreviewKeyDown_nospace" MaxLength="5"/>
+                    <Button x:Name="btnNetConnect" Content="网路联机" HorizontalAlignment="Left" Margin="185,0,0,7" VerticalAlignment="Bottom" Width="60" Click="btnNetConnect_Click"/>
+                </Grid>
+                <Grid x:Name="gridSendCommand" Grid.Column="3">
+                    <TextBox x:Name="tbCommand" Height="25" Margin="0,2,103,0" TextWrapping="NoWrap"  Text="" VerticalAlignment="Top" CharacterCasing="Upper"/>
+                    <Button x:Name="sendButton" Content="发送" Margin="0,2,23,0" VerticalAlignment="Top" Click="sendButton_Click" HorizontalAlignment="Right" Width="75"/>
+                </Grid>
+
+
             </Grid>
             <Grid Grid.Row="1" Name="gridAction">
                 <Grid.ColumnDefinitions>
@@ -82,8 +99,13 @@
                                 </Grid.Background>
                                 <Label Name="lblSSID" Content="" HorizontalAlignment="Left" Margin="0,0,5,0" VerticalAlignment="Top" Foreground="Lime" FontWeight="Bold" FontSize="10"/>
                                 <Label Name="lblIP" Content="" HorizontalAlignment="Left" Margin="0,10,5,0" VerticalAlignment="Top" Foreground="Lime" FontWeight="Bold" FontSize="10"/>
+                                <Label Name="lblEventHandlerStatus" Content="" HorizontalAlignment="Left" Margin="0,20,5,0" VerticalAlignment="Top" Foreground="Lime" FontWeight="Bold" FontSize="12"/>
+
                                 <Label Name="lblBattery" Content="" HorizontalAlignment="Right" Margin="0,0,5,0" VerticalAlignment="Top" Foreground="Lime" FontWeight="Bold" FontSize="18"/>
                                 <Label Name="lblBatteryValue" Content="" HorizontalAlignment="Right" Margin="0,20,5,0" VerticalAlignment="Top" Foreground="Lime" FontWeight="Bold" FontSize="16"/>
+                                <Label Name="lbl_ax" Content="" HorizontalAlignment="Right" Margin="0,40,5,0" VerticalAlignment="Top" Foreground="Pink" FontWeight="Bold" FontSize="10"/>
+                                <Label Name="lbl_ay" Content="" HorizontalAlignment="Right" Margin="0,50,5,0" VerticalAlignment="Top" Foreground="LightGreen" FontWeight="Bold" FontSize="10"/>
+                                <Label Name="lbl_az" Content="" HorizontalAlignment="Right" Margin="0,60,5,0" VerticalAlignment="Top" Foreground="Cyan" FontWeight="Bold" FontSize="10"/>
                             </Grid>
 
                             <Grid x:Name="gridData_2" Width="300" >
@@ -103,218 +125,77 @@
                                     <TabControl>
                                         <TabItem Header="动作设定">
                                             <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="60" />
-                                                    <RowDefinition Height="80" />
-                                                    <RowDefinition Height="*" />
-                                                </Grid.RowDefinitions>
-                                                <Grid Grid.Row="0">
-                                                    <Button x:Name="btnDetect" Content="更新" HorizontalAlignment="Left" Margin="15,5,0,0" VerticalAlignment="Top" Width="80" Click="btnDetect_Click"/>
-                                                    <Button x:Name="btnSelectAll" Content="全选" HorizontalAlignment="Left" Margin="110,5,0,0" VerticalAlignment="Top" Width="80" Click="btnSelectAll_Click"/>
-                                                    <Button x:Name="btnClearSelection" Content="清除" HorizontalAlignment="Left" Margin="205,5,0,0" VerticalAlignment="Top" Width="80" Click="btnClear_Click"/>
-                                                    <Button x:Name="btnUnlockSelected" Content="解锁" HorizontalAlignment="Left" Margin="15,30,0,0" VerticalAlignment="Top" Width="80" Click="btnUnlockSelected_Click"/>
-                                                    <Button x:Name="btnLockSelected" Content="锁上" HorizontalAlignment="Left" Margin="110,30,0,0" VerticalAlignment="Top" Width="80" Click="btnLockSelected_Click"/>
-                                                    <Button x:Name="btnLockAll" Content="全锁" HorizontalAlignment="Left" Margin="205,30,0,0" VerticalAlignment="Top" Width="80" Click="btnLockAll_Click"/>
-                                                </Grid>
-                                                <Grid Name="gridServo" Grid.Row="1" IsEnabled="false" Margin="0,0,0,0" Background="LightGreen">
-                                                    <Border BorderBrush="Black" BorderThickness="1"/>
-                                                    <Grid Margin="0,5,0,0">
-                                                        <Label x:Name="lblServoId" Content="舵机编号:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
-                                                        <TextBox x:Name="tbActiveServoId" HorizontalAlignment="Left" Height="23" Margin="70,2,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30" IsReadOnly="True"/>
-                                                        <CheckBox x:Name="cbxActiveSelected" Content="选取" HorizontalAlignment="Left" Margin="150,5,0,0" VerticalAlignment="Top" Checked="cbxActiveSelected_Changed" Unchecked="cbxActiveSelected_Changed"/>
-                                                        <CheckBox x:Name="cbxActiveLocked" Content="锁上" HorizontalAlignment="Left" Margin="210,5,0,0" VerticalAlignment="Top" Checked="cbxActiveLocked_Changed" Unchecked="cbxActiveLocked_Changed"/>
-                                                        <Slider x:Name="sliderActiveAngle" HorizontalAlignment="Left" Margin="17,30,0,0" VerticalAlignment="Top" Width="240" Minimum="0" Maximum="240" ValueChanged="sliderActiveAngle_ValueChanged" MouseUp="sliderActiveAngle_MouseUp"/>
-                                                        <Label x:Name="lblAngle" Content="0" HorizontalAlignment="Left" Margin="257,22,0,0" VerticalAlignment="Top" Width="33" />
-                                                        <Label x:Name="lblLed" Content="LED 设定:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
-                                                        <RadioButton x:Name="rbLedNoChange" Content="不变" HorizontalAlignment="Left" Margin="80,56,0,0" VerticalAlignment="Top" Click="rbLed_Clicked"/>
-                                                        <RadioButton x:Name="rbLedTurnOn" Content="点亮" HorizontalAlignment="Left" Margin="140,56,0,0" VerticalAlignment="Top" Click="rbLed_Clicked" />
-                                                        <RadioButton x:Name="rbLedTurnOff" Content="关掉" HorizontalAlignment="Left" Margin="200,56,0,0" VerticalAlignment="Top" Click="rbLed_Clicked"/>
+                                                <StackPanel>
+                                                    <Grid Height="30" x:Name="gridEventHandlerMode" Background="LightGreen">
+                                                        <Button x:Name="btnSuspendEventHandler" Content="屏蔽反射动作" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Width="120" Click="btnSuspendEventHandler_Click"/>
+                                                        <Button x:Name="btnResumeEventHandler" Content="恢复反射动作" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Width="120" Click="btnResumeEventHandler_Click"/>
                                                     </Grid>
-                                                </Grid>
-                                                <Grid Grid.Row="2"  >
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="30" />
-                                                        <RowDefinition Height="30" />
-                                                        <RowDefinition Height="50" />
-                                                        <RowDefinition Height="30" />
-                                                    </Grid.RowDefinitions>
-                                                    <Grid Grid.Row="0">
-                                                        <Button x:Name="btnAllLedNoChange" Content="灯号全不变" HorizontalAlignment="Left" Margin="15,0,0,0" VerticalAlignment="Center" Width="80" Click="btnAllLedNoChange_Click"/>
-                                                        <Button x:Name="btnAllLedOn" Content="灯号全亮" HorizontalAlignment="Left" Margin="110,0,0,0" VerticalAlignment="Center" Width="80" Click="btnAllLedOn_Click"/>
-                                                        <Button x:Name="btnAllLedOff" Content="灯号全灭" HorizontalAlignment="Left" Margin="205,0,0,0" VerticalAlignment="Center" Width="80" Click="btnAllLedOff_Click"/>
+                                                    <Grid Height="60">
+                                                        <Button x:Name="btnDetect" Content="更新" HorizontalAlignment="Left" Margin="15,5,0,0" VerticalAlignment="Top" Width="80" Click="btnDetect_Click"/>
+                                                        <Button x:Name="btnSelectAll" Content="全选" HorizontalAlignment="Left" Margin="110,5,0,0" VerticalAlignment="Top" Width="80" Click="btnSelectAll_Click"/>
+                                                        <Button x:Name="btnClearSelection" Content="清除" HorizontalAlignment="Left" Margin="205,5,0,0" VerticalAlignment="Top" Width="80" Click="btnClear_Click"/>
+                                                        <Button x:Name="btnUnlockSelected" Content="解锁" HorizontalAlignment="Left" Margin="15,30,0,0" VerticalAlignment="Top" Width="80" Click="btnUnlockSelected_Click"/>
+                                                        <Button x:Name="btnLockSelected" Content="锁上" HorizontalAlignment="Left" Margin="110,30,0,0" VerticalAlignment="Top" Width="80" Click="btnLockSelected_Click"/>
+                                                        <Button x:Name="btnLockAll" Content="全锁" HorizontalAlignment="Left" Margin="205,30,0,0" VerticalAlignment="Top" Width="80" Click="btnLockAll_Click"/>
                                                     </Grid>
-                                                    <Grid Grid.Row="1">
-                                                        <Label x:Name="lblHeadLed" Content="头灯设定:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                                                        <RadioButton x:Name="rbHeadLedNoChange" Content="不变" HorizontalAlignment="Left" Margin="80,0,0,0" VerticalAlignment="Center" Click="rbHeadLed_Clicked"/>
-                                                        <RadioButton x:Name="rbHeadLedTurnOn" Content="点亮" HorizontalAlignment="Left" Margin="140,0,0,0" VerticalAlignment="Center" Click="rbHeadLed_Clicked"/>
-                                                        <RadioButton x:Name="rbHeadLedTurnOff" Content="关掉" HorizontalAlignment="Left" Margin="200,0,0,0" VerticalAlignment="Center" Click="rbHeadLed_Clicked"/>
+                                                    <Grid Name="gridServo" Height="80" IsEnabled="false" Margin="0,0,0,0" Background="LightGreen">
+                                                        <Border BorderBrush="Black" BorderThickness="1"/>
+                                                        <Grid Margin="0,5,0,0">
+                                                            <Label x:Name="lblServoId" Content="舵机编号:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+                                                            <TextBox x:Name="tbActiveServoId" HorizontalAlignment="Left" Height="23" Margin="70,2,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30" IsReadOnly="True"/>
+                                                            <CheckBox x:Name="cbxActiveSelected" Content="选取" HorizontalAlignment="Left" Margin="150,5,0,0" VerticalAlignment="Top" Checked="cbxActiveSelected_Changed" Unchecked="cbxActiveSelected_Changed"/>
+                                                            <CheckBox x:Name="cbxActiveLocked" Content="锁上" HorizontalAlignment="Left" Margin="210,5,0,0" VerticalAlignment="Top" Checked="cbxActiveLocked_Changed" Unchecked="cbxActiveLocked_Changed"/>
+                                                            <Slider x:Name="sliderActiveAngle" HorizontalAlignment="Left" Margin="17,30,0,0" VerticalAlignment="Top" Width="240" Minimum="0" Maximum="240" ValueChanged="sliderActiveAngle_ValueChanged" GotMouseCapture="sliderActiveAngle_GotMouseCapture" LostMouseCapture="sliderActiveAngle_LostMouseCapture" />
+                                                            <Label x:Name="lblAngle" Content="0" HorizontalAlignment="Left" Margin="257,22,0,0" VerticalAlignment="Top" Width="33" />
+                                                            <Label x:Name="lblLed" Content="LED 设定:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
+                                                            <RadioButton x:Name="rbLedNoChange" Content="不变" HorizontalAlignment="Left" Margin="80,56,0,0" VerticalAlignment="Top" Click="rbLed_Clicked"/>
+                                                            <RadioButton x:Name="rbLedTurnOn" Content="点亮" HorizontalAlignment="Left" Margin="140,56,0,0" VerticalAlignment="Top" Click="rbLed_Clicked" />
+                                                            <RadioButton x:Name="rbLedTurnOff" Content="关掉" HorizontalAlignment="Left" Margin="200,56,0,0" VerticalAlignment="Top" Click="rbLed_Clicked"/>
+                                                        </Grid>
                                                     </Grid>
-                                                    <Grid Grid.Row="2">
-                                                        <Label x:Name="lblPlay" Content="播放:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
-                                                        <TextBox x:Name="tbMp3Folder" HorizontalAlignment="Left" Height="23" Margin="46,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="43" MaxLength="3" PreviewTextInput="tb_PreviewInteger" />
-                                                        <Label x:Name="lblPlayFile" Content="\" HorizontalAlignment="Left" Margin="90,0,0,0" VerticalAlignment="Top"/>
-                                                        <TextBox x:Name="tbMp3File" HorizontalAlignment="Left" Height="23" Margin="107,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="50" MaxLength="3" PreviewTextInput="tb_PreviewInteger" />
-                                                        <Label x:Name="lblPlayVol" Content="音量:" HorizontalAlignment="Left" Margin="170,0,0,0" VerticalAlignment="Top" Width="35"/>
-                                                        <TextBox x:Name="tbMp3Vol" HorizontalAlignment="Left" Height="23" Margin="210,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="50" MaxLength="2" PreviewTextInput="tb_PreviewInteger" />
-                                                        <CheckBox x:Name="cbxStopMp3" Content="停止播放" HorizontalAlignment="Left" Margin="15,30,0,0" VerticalAlignment="Top" Checked="cbxStopMp3_Changed" Unchecked="cbxStopMp3_Changed"/>
-                                                        <Button x:Name="btnMp3Test" Content="测试" HorizontalAlignment="Left" Margin="149,33,0,0" VerticalAlignment="Top" Width="56" Click="btnMp3Test_Click"/>
-                                                        <Button x:Name="btnMp3Stop" Content="停止" HorizontalAlignment="Left" Margin="210,33,0,0" VerticalAlignment="Top" Width="50" Click="btnMp3Stop_Click"/>
+                                                    <Grid Height="auto" >
+                                                        <StackPanel>
+
+                                                            <Grid Height="30">
+                                                                <Button x:Name="btnAllLedNoChange" Content="灯号全不变" HorizontalAlignment="Left" Margin="15,0,0,0" VerticalAlignment="Center" Width="80" Click="btnAllLedNoChange_Click"/>
+                                                                <Button x:Name="btnAllLedOn" Content="灯号全亮" HorizontalAlignment="Left" Margin="110,0,0,0" VerticalAlignment="Center" Width="80" Click="btnAllLedOn_Click"/>
+                                                                <Button x:Name="btnAllLedOff" Content="灯号全灭" HorizontalAlignment="Left" Margin="205,0,0,0" VerticalAlignment="Center" Width="80" Click="btnAllLedOff_Click"/>
+                                                            </Grid>
+                                                            <Grid Height="30">
+                                                                <Label x:Name="lblHeadLed" Content="头灯设定:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                                                <RadioButton x:Name="rbHeadLedNoChange" Content="不变" HorizontalAlignment="Left" Margin="80,0,0,0" VerticalAlignment="Center" Click="rbHeadLed_Clicked"/>
+                                                                <RadioButton x:Name="rbHeadLedTurnOn" Content="点亮" HorizontalAlignment="Left" Margin="140,0,0,0" VerticalAlignment="Center" Click="rbHeadLed_Clicked"/>
+                                                                <RadioButton x:Name="rbHeadLedTurnOff" Content="关掉" HorizontalAlignment="Left" Margin="200,0,0,0" VerticalAlignment="Center" Click="rbHeadLed_Clicked"/>
+                                                            </Grid>
+                                                            <Grid Height="60">
+                                                                <Label x:Name="lblPlay" Content="播放:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+                                                                <TextBox x:Name="tbMp3Folder" HorizontalAlignment="Left" Height="23" Margin="46,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="43" MaxLength="3" PreviewTextInput="tb_PreviewInteger" />
+                                                                <Label x:Name="lblPlayFile" Content="\" HorizontalAlignment="Left" Margin="90,0,0,0" VerticalAlignment="Top"/>
+                                                                <TextBox x:Name="tbMp3File" HorizontalAlignment="Left" Height="23" Margin="107,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="50" MaxLength="3" PreviewTextInput="tb_PreviewInteger" />
+                                                                <Label x:Name="lblPlayVol" Content="音量:" HorizontalAlignment="Left" Margin="170,0,0,0" VerticalAlignment="Top" Width="35"/>
+                                                                <TextBox x:Name="tbMp3Vol" HorizontalAlignment="Left" Height="23" Margin="210,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="50" MaxLength="2" PreviewTextInput="tb_PreviewInteger" />
+                                                                <CheckBox x:Name="cbxStopMp3" Content="停止播放" HorizontalAlignment="Left" Margin="15,30,0,0" VerticalAlignment="Top" Checked="cbxStopMp3_Changed" Unchecked="cbxStopMp3_Changed"/>
+                                                                <Button x:Name="btnMp3Test" Content="测试" HorizontalAlignment="Left" Margin="149,33,0,0" VerticalAlignment="Top" Width="56" Click="btnMp3Test_Click"/>
+                                                                <Button x:Name="btnMp3Stop" Content="停止" HorizontalAlignment="Left" Margin="210,33,0,0" VerticalAlignment="Top" Width="50" Click="btnMp3Stop_Click"/>
+                                                            </Grid>
+                                                            <Grid Height="30">
+                                                                <Label x:Name="lblExecTime" Content="执行时间:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                                                <TextBox x:Name="tbExecTime" HorizontalAlignment="Left" Height="23" Margin="70,0,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Width="50" MaxLength="5" PreviewTextInput="tb_PreviewInteger" />
+                                                                <Label x:Name="lblWaitTime" Content="等待时间:" HorizontalAlignment="Left" Margin="145,0,0,0" VerticalAlignment="Center"/>
+                                                                <TextBox x:Name="tbWaitTime" HorizontalAlignment="Left" Height="23" Margin="210,0,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Width="50" MaxLength="5" PreviewTextInput="tb_PreviewInteger"/>
+                                                            </Grid>
+                                                        </StackPanel>
                                                     </Grid>
-                                                    <Grid Grid.Row="3">
-                                                        <Label x:Name="lblExecTime" Content="执行时间:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                                                        <TextBox x:Name="tbExecTime" HorizontalAlignment="Left" Height="23" Margin="70,0,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Width="50" MaxLength="5" PreviewTextInput="tb_PreviewInteger" />
-                                                        <Label x:Name="lblWaitTime" Content="等待时间:" HorizontalAlignment="Left" Margin="145,0,0,0" VerticalAlignment="Center"/>
-                                                        <TextBox x:Name="tbWaitTime" HorizontalAlignment="Left" Height="23" Margin="210,0,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Width="50" MaxLength="5" PreviewTextInput="tb_PreviewInteger"/>
-                                                    </Grid>
-                                                </Grid>
+                                                </StackPanel>
                                             </Grid>
                                         </TabItem>
+
                                         <TabItem Header="舵机维护">
-                                            <Grid x:Name="gridServoFix"  IsEnabled="false" >
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="140" />
-                                                    <RowDefinition Height="40" />
-                                                    <RowDefinition Height="*" />
-                                                </Grid.RowDefinitions>
-                                                <Grid Grid.Row="0" Background="LightGreen">
-                                                    <Grid  Margin="0,5,0,0">
-                                                        <Label Content="舵机编号:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
-                                                        <TextBox x:Name="tbActiveAdjServoId" HorizontalAlignment="Left" Height="23" Margin="70,2,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30" IsReadOnly="True"/>
-
-                                                        <Label Content="设定舵机角度偏移量:" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Foreground="#FF780505" FontWeight="Bold"/>
-                                                        <TextBox Name="txtAdjAngle" HorizontalAlignment="Left" Height="23" Margin="147,27,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="40" PreviewTextInput="tb_PreviewHex" PreviewKeyDown="tb_PreviewKeyDown_nospace" CharacterCasing="Upper" MaxLength="4" LostFocus="adjAngle_Changed"/>
-                                                        <TextBox Name="txtAdjMsg" Height="23" Margin="192,27,10,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" IsReadOnly="True" Background="LightBlue"/>
-                                                        <Slider Name="sliderAdjValue" Margin="10,55,6,0" VerticalAlignment="Top" Minimum="-304" Maximum="304" ValueChanged="Slider_ValueChanged" />
-                                                        <Label Content="成功设定後, 把舵机移动到" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top"/>
-                                                        <TextBox Name="txtAdjPreview" HorizontalAlignment="Left" Height="23" Margin="160,77,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="34" PreviewTextInput="tb_PreviewInteger" PreviewKeyDown="tb_PreviewKeyDown_nospace" CharacterCasing="Upper" MaxLength="3"/>
-                                                        <Label Content="进行对位." HorizontalAlignment="Left" Margin="200,75,0,0" VerticalAlignment="Top"/>
-                                                        <Button Name="btnReadAdjAngle" Content="读取偏移量" HorizontalAlignment="Left" Margin="17,106,0,0" VerticalAlignment="Top" Width="100" Click="btnReadAdjAngle_Click"/>
-                                                        <Button Name="btnSetAdjAngle" Content="设定偏移量" Margin="0,106,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100" Click="btnSetAdjAngle_Click"/>
-                                                    </Grid>
-                                                </Grid>
-                                                <Grid Grid.Row="1" Background="OrangeRed">
-                                                    <Grid Margin="0,8,0,0">
-                                                        <Label Content="当前位置为: " HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" />
-                                                        <TextBox Name="txtFixAngle" HorizontalAlignment="Left" Height="23" Margin="83,2,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="26" PreviewTextInput="tb_PreviewInteger" PreviewKeyDown="tb_PreviewKeyDown_nospace" CharacterCasing="Upper" MaxLength="3"/>
-                                                        <Label Content="度, 微调量:" HorizontalAlignment="Left" Margin="109,0,0,0" VerticalAlignment="Top" />
-                                                        <ComboBox x:Name="cboDelta" HorizontalAlignment="Left" Margin="176,2,0,0" VerticalAlignment="Top" Width="40" Height="23">
-                                                            <ComboBoxItem IsSelected="True">0</ComboBoxItem>
-                                                            <ComboBoxItem>1</ComboBoxItem>
-                                                            <ComboBoxItem>2</ComboBoxItem>
-                                                        </ComboBox>
-                                                        <Button Name="btnAutoFixAngle" Content="自动设定" Margin="0,4,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="60" Click="btnAutoFixAngle_Click"/>
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
+                                            <uc:UcMain_Servo x:Name="ucMainServo" />
                                         </TabItem>
+
                                         <TabItem Header="主控板">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="250" />
-                                                    <RowDefinition Height="40" />
-                                                </Grid.RowDefinitions>
-                                                <Grid Grid.Row="0">
-
-                                                    <TabControl>
-                                                        <TabItem Header="系統設定">
-                                                            <Grid>
-                                                                <StackPanel>
-                                                                    <Grid Height="25" Background="LightPink">
-                                                                        <Button x:Name="btnDebugOn" Content="启动除虫" Margin="0,0,100,0" VerticalAlignment="Center" Click="btnDebugOn_Click" HorizontalAlignment="Right" Width="70"/>
-                                                                        <Button x:Name="btnDebugOff" Content="停止除虫" Margin="0,0,10,0" VerticalAlignment="Center" Click="btnDebugOff_Click" HorizontalAlignment="Right" Width="70"/>
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <Label Content="参考电压:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbVoltageRef" Text="" Margin="70,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" PreviewTextInput="tb_PreviewInteger" MaxLength="4"/>
-                                                                        <Label Content="最低值:" Margin="120,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbVoltageLow" Text="" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="4"/>
-                                                                        <Label Content="最高值:" Margin="205,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbVoltageHigh"  Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="4"/>
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <Label Content="低电门槛:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbVoltageAlarm"  Text="" Margin="70,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
-                                                                        <Label Content="提示音乐:" Margin="108,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbVoltageAlarmMp3"  Text="" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
-                                                                        <Label Content="间距(秒):" Margin="200,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbVoltageAlarmInterval"  Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3" />
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <Label Content="舵机数目:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbMaxServo" Text="" Margin="70,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="20" PreviewTextInput="tb_PreviewInteger" MaxLength="2"/>
-                                                                        <Label Content="出现缺漏时, 重复侦测次数:" Margin="105,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbMaxDetectRetry"  Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <Label Content="指令超时:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbCommandTimeout"  Text="" Margin="70,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="2"/>
-                                                                        <Label Content="ms" Margin="100,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <Label Content="失败後重试次数:" Margin="160,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbMaxCommandRetry"  Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <CheckBox x:Name="cbxMp3Enabled" Content="MP3 模块" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <Label Content="启动音量:" Margin="100,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbMp3Volume" Text="" Margin="160,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
-                                                                        <Label Content="自动播放:" Margin="195,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbMp3Startup" Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <CheckBox x:Name="cbxConnectRouter" Content="启动时自动连接路由器" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"  />
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <CheckBox x:Name="cbxEnableOLED" Content="使用OLED颢示屏" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"  />
-                                                                    </Grid>
-                                                                </StackPanel>
-                                                            </Grid>
-                                                        </TabItem>
-                                                        <TabItem Header="特殊動作">
-                                                            <Grid>
-                                                                <StackPanel>
-                                                                    <Grid Height="25">
-                                                                        <CheckBox x:Name="cbxAutoStand" Content="倒地後自动站立:" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <Label Content="面向上:" Margin="120,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbAutoFaceUp" Text="" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
-                                                                        <Label Content="面向下:" Margin="205,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbAutoFaceDown" Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <Label Content="探测灵敏度:" Margin="25,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbMpuCheckFreq" Text="" Margin="95,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger" IsReadOnly="True"/>
-                                                                        <Label Content="Hz" Margin="135,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <Label Content="姿态灵敏度:" Margin="165,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbPositionCheckFreq" Text="" Margin="235,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
-                                                                        <Label Content="Hz" Margin="265,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <CheckBox x:Name="cbxTouchEnabled" Content="触摸感应" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <Label Content="连击时间:" Margin="90,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbTouchDetectPeriod" Text="" Margin="150,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
-                                                                        <Label Content="感应间距:" Margin="190,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbTouchReleasePeriod" Text="" Margin="250,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
-                                                                    </Grid>
-                                                                    <Grid Height="25">
-                                                                        <Label Content="长按:" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbTouchAction0" Text="" Margin="45,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
-                                                                        <Label Content="单击:" Margin="80,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbTouchAction1" Text="" Margin="115,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
-                                                                        <Label Content="双击:" Margin="150,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbTouchAction2" Text="" Margin="185,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
-                                                                        <Label Content="三击:" Margin="220,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                                                        <TextBox x:Name="tbTouchAction3" Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger" />
-                                                                    </Grid>
-
-                                                                </StackPanel>
-                                                            </Grid>
-                                                        </TabItem>
-                                                    </TabControl>
-                                                </Grid>
-                                                <Grid Grid.Row="1">
-                                                    <Button x:Name="btnFactoryDefaultConfig" Content="出厂设定" Margin="10,8,0,7" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Click="btnFactoryDefaultConfig_Click" />
-                                                    <Button x:Name="btnResetBoardConfig" Content="重新读取" Margin="110,8,0,7" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Click="btnResetBoardConfig_Click" />
-                                                    <Button x:Name="btnSaveBoardConfig" Content="储存设定" Margin="0,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Right" Width="80" Click="btnSaveBoardConfig_Click" />
-                                                </Grid>
-                                            </Grid>
+                                            <uc:UcMain_ControlBoard x:Name="ucControlBoard" />
                                         </TabItem>
                                     </TabControl>
                                 </Grid>

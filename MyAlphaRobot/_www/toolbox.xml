@@ -1,0 +1,184 @@
+<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+  <category name="事件处理">
+    <block type="event_pre_condition"></block>
+    <block type="event_handler"></block>
+  </category>
+  <category name="条件">
+    <block type="cond_touch">
+      <field name="touch_status">1</field>
+    </block>
+    <block type="cond_mpu6050">
+      <field name="axis">0</field>
+      <field name="axis_check">2</field>
+      <field name="axis_value">0</field>
+    </block>
+    <block type="cond_psx_button">
+      <field name="psx_button">FFFB</field>
+    </block>
+    <block type="cond_battery_reading">
+      <field name="battery_reading">0</field>
+    </block>
+    <block type="cond_battery_level">
+      <field name="battery_level">0</field>
+    </block>
+<!--
+    <block type="cond_gpio">
+      <field name="gpio_pin">13</field>
+      <field name="gpio_status">1</field>
+    </block>
+-->
+  </category>
+  <category name="动作">
+    <block type="action_play_action">
+      <field name="action_id">0</field>
+    </block>
+    <block type="action_stop_action"></block>
+    <block type="action_head_led">
+      <field name="led_status">1</field>
+    </block>
+    <block type="action_mp3_play_mp3">
+      <field name="mp3_file">0</field>
+    </block>
+    <block type="action_mp3_play_file">
+      <field name="mp3_folder">0</field>
+      <field name="mp3_file">0</field>
+    </block>
+    <block type="action_mp3_stop"></block>
+<!--
+    <block type="action_gpio">
+      <field name="gpio_pin">15</field>
+      <field name="gpio_status">1</field>
+    </block>
+-->
+    <block type="action_system_action">
+      <field name="system_action_id">1</field>
+    </block>
+    <block type="action_servo">
+      <field name="servo_id">1</field>
+      <field name="action_time">1</field>
+      <field name="action_angle">1</field>
+    </block>
+  </category>
+  <category name="预设事件">
+    <block type="event_handler">
+      <value name="condition">
+        <block type="cond_mpu6050">
+          <field name="axis">2</field>
+          <field name="axis_check">3</field>
+          <field name="axis_value">-14400</field>
+        </block>
+      </value>
+      <value name="action">
+        <block type="action_play_action">
+          <field name="action_id">5</field>
+        </block>
+      </value>
+      <next>
+        <block type="event_handler">
+          <value name="condition">
+            <block type="cond_mpu6050">
+              <field name="axis">2</field>
+              <field name="axis_check">2</field>
+              <field name="axis_value">14400</field>
+            </block>
+          </value>
+          <value name="action">
+            <block type="action_play_action">
+              <field name="action_id">6</field>
+            </block>
+          </value>
+        </block>
+      </next>
+    </block>
+    <block type="event_handler">
+      <value name="condition">
+        <block type="cond_touch">
+          <field name="touch_status">1</field>
+        </block>
+      </value>
+      <value name="action">
+        <block type="action_play_action">
+          <field name="action_id">11</field>
+        </block>
+      </value>
+      <next>
+        <block type="event_handler">
+          <value name="condition">
+            <block type="cond_touch">
+              <field name="touch_status">2</field>
+            </block>
+          </value>
+          <value name="action">
+            <block type="action_play_action">
+              <field name="action_id">12</field>
+            </block>
+          </value>
+          <next>
+            <block type="event_handler">
+              <value name="condition">
+                <block type="cond_touch">
+                  <field name="touch_status">3</field>
+                </block>
+              </value>
+              <value name="action">
+                <block type="action_play_action">
+                  <field name="action_id">13</field>
+                </block>
+              </value>
+              <next>
+                <block type="event_handler">
+                  <value name="condition">
+                    <block type="cond_touch">
+                      <field name="touch_status">255</field>
+                    </block>
+                  </value>
+                  <value name="action">
+                    <block type="action_play_action">
+                      <field name="action_id">14</field>
+                    </block>
+                  </value>
+                </block>
+              </next>
+            </block>
+          </next>
+        </block>
+      </next>
+    </block>
+    <block type="event_handler">
+      <value name="condition">
+        <block type="cond_battery_level">
+          <field name="battery_level">10</field>
+        </block>
+      </value>
+      <value name="action">
+        <block type="action_stop_action"></block>
+      </value>
+    </block>
+    <block type="event_handler">
+      <value name="condition">
+        <block type="cond_battery_level">
+          <field name="battery_level">10</field>
+        </block>
+      </value>
+      <value name="action">
+        <block type="action_mp3_play_mp3">
+          <field name="mp3_file">2</field>
+        </block>
+      </value>
+      <next>
+        <block type="event_handler">
+          <value name="condition">
+            <block type="cond_battery_level">
+              <field name="battery_level">30</field>
+            </block>
+          </value>
+          <value name="action">
+            <block type="action_mp3_play_mp3">
+              <field name="mp3_file">3</field>
+            </block>
+          </value>
+        </block>
+      </next>
+    </block>
+  </category>
+</xml>

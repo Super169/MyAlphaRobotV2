@@ -16,14 +16,15 @@ namespace MyAlphaRobot
         private Random RAND = new Random(DateTime.Now.Millisecond);
         private int activeServo = 0;
 
-        private bool batteryUpdating = false;
+        private bool backgroundRunning = false;
         private bool systemWorking = false;
 
 
 
         private void InitObjects()
         {
-            FindPorts((string)UTIL.ReadRegistry(UTIL.KEY.LAST_CONNECTION));
+            // FindPorts((string)MyUtil.UTIL.ReadRegistry(REGKEY.LAST_CONNECTION));
+            InitConnection();
             InitUBT();
             InitServo();
             InitTimer();
@@ -34,7 +35,7 @@ namespace MyAlphaRobot
         {
             ucComboDisplay.InitObject(UBT.comboTable, UpdateInfo);
 
-            string lastLayout = (string)UTIL.ReadRegistry(UTIL.KEY.LAST_LAYOUT);
+            string lastLayout = (string)MyUtil.UTIL.ReadRegistry(REGKEY.LAST_LAYOUT);
             wrapMain.Width = (lastLayout == "LOW" ? 600 : 300);
             ucActionList.InitObject(UBT.actionTable, UpdateInfo);
             ucActionList.DoubleClick += ActionList_DoubleClick;
@@ -45,29 +46,17 @@ namespace MyAlphaRobot
             ucActionList.InsertPoseBefore += ActionList_InsertPoseBefore;
             ucActionList.InsertPoseAfter += ActionList_InsertPoseAfter;
             ucActionList.DeletePose += ActionList_DeletePose;
+            ucActionList.CopyToEnd += ActionList_CopyToEnd;
 
             ucActionDetail.InitObject(UBT.actionTable);
             ucActionDetail.DoubleClick += ActionDetail_DoubleClick;
             ucActionDetail.EnableChanged += ActionDetail_EnableChanged;
+
+            ucMainServo.InitObject(UBT, UpdateInfo, CommandHandler);
+            ucControlBoard.InitObject(UBT, UpdateInfo, CommandHandler);
+
             SetStatus();
             rbServoLock.IsChecked = true;
-        }
-
-
-        private void SetStatus()
-        {
-            bool connected = UBT.connected;
-            portsComboBox.IsEnabled = !connected;
-            findPortButton.IsEnabled = !connected;
-            findPortButton.Visibility = (connected ? Visibility.Hidden : Visibility.Visible);
-            connectButton.Content = (connected ? "断开" : "联机");
-            tbCommand.IsEnabled = connected;
-            sendButton.IsEnabled = connected;
-            gridAction.IsEnabled = connected;
-            configRobotMenuItem.IsEnabled = !connected;
-            imgConfigRobot.IsEnabled = !connected;
-            // saveConfigMenuItem.IsEnabled = connected;
-            // loadConfigMenuItem.IsEnabled = connected;
         }
 
         private void InitServo()

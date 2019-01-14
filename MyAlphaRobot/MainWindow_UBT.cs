@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUtil;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,11 +10,11 @@ namespace MyAlphaRobot
 {
     public partial class MainWindow : Window
     {
-        private UBTController UBT;
+        public UBTController UBT;
 
         private void InitUBT()
         {
-            UBT = new UBTController(UpdateInfoCallback, UpdateServoCallback);
+            UBT = new UBTController(UpdateInfoCallback, UpdateServoCallback, robot);
         }
 
     }

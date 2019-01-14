@@ -1,0 +1,182 @@
+﻿<local:UcMain__parent x:Class="MyAlphaRobot.uc.UcMain_ControlBoard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyAlphaRobot.uc"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="250" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+
+            <TabControl>
+                <TabItem Header="系统设定">
+                    <Grid>
+                        <StackPanel>
+                            <Grid Height="25" Background="LightPink">
+                                <TextBlock x:Name="tbVersion" HorizontalAlignment="Left" Margin="10,4,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="113" FontWeight="Bold" FontSize="14"/>
+                                <Button x:Name="btnDebugOn" Content="启动除虫" Margin="0,2,85,3" VerticalAlignment="Center" Click="btnDebugOn_Click" HorizontalAlignment="Right" Width="70"/>
+                                <Button x:Name="btnDebugOff" Content="停止除虫" Margin="0,0,10,0" VerticalAlignment="Center" Click="btnDebugOff_Click" HorizontalAlignment="Right" Width="70"/>
+                            </Grid>
+                            <Grid x:Name="gridBatteryVoltage" Height="25">
+                                <Label Content="参考电压:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbBatteryRefVoltage" Text="" Margin="70,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" PreviewTextInput="tb_PreviewInteger" MaxLength="4"/>
+                                <Label Content="最低值:" Margin="120,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbBatteryMinValue" Text="" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="4"/>
+                                <Label Content="最高值:" Margin="205,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbBatteryMaxValue"  Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="4"/>
+                            </Grid>
+                            <Grid x:Name="gridBatteryAlarm" Height="25">
+                                <Label Content="电量检测间距(秒):" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label Content="一般情况:" Margin="108,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbBatteryCheckSec"  Text="" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
+                                <Label Content="警报时:" Margin="205,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbBatteryAlarmSec"  Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3" />
+                            </Grid>
+                            <!--
+                            <Grid Height="25">
+                                <Label Content="低电门槛:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbVoltageAlarm"  Text="" Margin="70,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
+                                <Label Content="提示音乐:" Margin="108,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbVoltageAlarmMp3"  Text="" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
+                                <Label Content="间距(秒):" Margin="200,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbBatteryAlarmSec"  Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3" />
+                            </Grid>
+                            -->
+                            <Grid Height="25">
+                                <Label Content="舵机数目:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMaxServo" Text="" Margin="70,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="20" PreviewTextInput="tb_PreviewInteger" MaxLength="2"/>
+                                <Label x:Name="lblMaxDetectRetry" Content="出现缺漏时, 重复侦测次数:" Margin="105,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMaxDetectRetry"  Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
+                            </Grid>
+                            <Grid x:Name="gridTimeoutRetry" Height="25">
+                                <Label Content="指令超时:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbCommandTimeout"  Text="" Margin="70,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="2"/>
+                                <Label Content="ms" Margin="100,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label Content="失败後重试次数:" Margin="160,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMaxCommandRetry"  Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
+                            </Grid>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxMp3Enabled" Content="MP3 模块" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label Content="启动音量:" Margin="100,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMp3Volume" Text="" Margin="160,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
+                                <Label Content="自动播放:" Margin="195,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMp3Startup" Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
+                            </Grid>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxEnableOLED" Content="使用OLED显示屏" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"  />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="特殊动作">
+                    <Grid>
+                        <StackPanel>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxMpuEnabled" Content="启动 MPU6050 陀螺仪" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </Grid>
+                            <!--
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxMpuEnabled" Content="倒地後自动站立:" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label Content="面向上:" Margin="120,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbAutoFaceUp" Text="" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
+                                <Label Content="面向下:" Margin="205,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbAutoFaceDown" Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
+                            </Grid>
+                            -->
+                            <Grid x:Name="gridMpuSensitivity" Height="25">
+                                <Label Content="探测灵敏度:" Margin="25,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMpuCheckFreq" Text="" Margin="95,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger" IsReadOnly="True"/>
+                                <Label Content="Hz" Margin="135,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label Content="姿态灵敏度:" Margin="165,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMpuPositionCheckFreq" Text="" Margin="235,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
+                                <Label Content="Hz" Margin="265,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </Grid>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxTouchEnabled" Content="触摸感应" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label x:Name="lblTouchDetectPeriod" Content="连击时间:" Margin="90,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbTouchDetectPeriod" Text="" Margin="150,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
+                                <Label x:Name="lblTouchReleasePeriod" Content="感应间距:" Margin="190,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbTouchReleasePeriod" Text="" Margin="250,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
+                            </Grid>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxPsxEnabled" Content="启动 PS2 手柄输入" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label x:Name="lblPsxCheckMs" Content="侦测按键间距:" Margin="166,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbPsxCheckMs" Text="" Margin="250,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
+                            </Grid>
+                            <Grid x:Name="gridPsxInteval" Height="25">
+                                <Label Content="间距(ms):" Margin="25,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label Content="按键无效:" Margin="90,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbPsxNoEventMs" Text="" Margin="150,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
+                                <Label Content="连按间距:" Margin="190,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbPsxIgnoreRepeatMs" Text="" Margin="250,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
+                            </Grid>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxPsxShock" Content="发出有效指令後震动手柄" Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </Grid>
+                            <Grid Height="25">
+                            </Grid>
+                            <Grid Height="25">
+                                <Button x:Name="btnEventHandler" Width="100"  Click="btnEventHandler_Click">事件处理系统</Button>
+                            </Grid>
+
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="网路连线 ">
+                    <Grid>
+                        <StackPanel>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxEnableRouter" Content="连接路由器" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label x:Name="lblRouterTimeout" Content="等待时间(秒):" Margin="150,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbRouterTimeout" Text="" Margin="230,4,10,3" VerticalAlignment="Center" MaxLength="3" PreviewTextInput="tb_PreviewInteger" />
+                            </Grid>
+                            <Grid Height="25">
+                                <Label Content="SSID:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbSSID" Text="" Margin="80,4,10,3" VerticalAlignment="Center" MaxLength="30" />
+                            </Grid>
+                            <Grid Height="25">
+                                <Label Content="Password:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbPassword" Text="" Margin="80,4,10,3" VerticalAlignment="Center"  MaxLength="20" />
+                            </Grid>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxEnableAP" Content="当 router 连线不成功, 启动 AP 模式" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </Grid>
+                            <Grid Height="25">
+                                <Label Content="AP 名称:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbAPName" Text="" Margin="80,4,10,3" VerticalAlignment="Center" MaxLength="20" />
+                            </Grid>
+                            <Grid Height="25">
+                                <Label Content="AP 密码:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbAPKey" Text="" Margin="80,4,10,3" VerticalAlignment="Center"  MaxLength="20" />
+                            </Grid>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxEnableServer" Content="启动网路设定网页" Margin="10,2,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label x:Name="lblServerPort" Content="连接埠:" Margin="180,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"  Width="60" />
+                                <TextBox x:Name="tbServerPort" Text="" Margin="230,4,10,3" VerticalAlignment="Center" MaxLength="5" PreviewTextInput="tb_PreviewInteger" />
+                            </Grid>
+                            <Grid Height="25">
+                                <CheckBox x:Name="cbxEnableUDP" Content="启动群控" Margin="10,2,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label x:Name="lblUdpRxPort"  Content="接收埠:" Margin="80,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="60" />
+                                <TextBox x:Name="tbUdpRxPort" Text="" Margin="130,4,110,3" VerticalAlignment="Center" MaxLength="5" PreviewTextInput="tb_PreviewInteger" />
+                                <Label x:Name="lblUdpTxPort" Content="发出埠:" Margin="180,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"  Width="60" />
+                                <TextBox x:Name="tbUdpTxPort" Text="" Margin="230,4,10,3" VerticalAlignment="Center" MaxLength="5" PreviewTextInput="tb_PreviewInteger" />
+                            </Grid>
+
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+
+            </TabControl>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Button x:Name="btnFactoryDefaultConfig" Content="出厂设定" Margin="10,8,0,7" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Click="btnFactoryDefaultConfig_Click" />
+            <Button x:Name="btnResetBoardConfig" Content="重新读取" Margin="110,8,0,7" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Click="btnResetBoardConfig_Click" />
+            <Button x:Name="btnSaveBoardConfig" Content="储存设定" Margin="0,5,10,5" VerticalAlignment="Center" HorizontalAlignment="Right" Width="80" Click="btnSaveBoardConfig_Click" />
+        </Grid>
+    </Grid>
+</local:UcMain__parent>

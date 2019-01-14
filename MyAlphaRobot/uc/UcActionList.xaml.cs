@@ -24,7 +24,7 @@ namespace MyAlphaRobot.uc
     public partial class UcActionList : UserControl
     {
 
-        private UTIL.DelegateUpdateInfo updateInfo;
+        private MyUtil.UTIL.DelegateUpdateInfo updateInfo;
 
         public event EventHandler SelectionChanged;
         public event EventHandler DoubleClick;
@@ -36,6 +36,7 @@ namespace MyAlphaRobot.uc
         public event EventHandler InsertPoseBefore;
         public event EventHandler InsertPoseAfter;
         public event EventHandler DeletePose;
+        public event EventHandler CopyToEnd;
 
         public int SelectedIndex { get { return lvActionList.SelectedIndex; } }
 
@@ -46,14 +47,14 @@ namespace MyAlphaRobot.uc
             InitializeComponent();
         }
 
-        public void InitObject(data.ActionTable actionTable, UTIL.DelegateUpdateInfo fxUpdateInfo)
+        public void InitObject(data.ActionTable actionTable, MyUtil.UTIL.DelegateUpdateInfo fxUpdateInfo)
         {
             updateInfo = fxUpdateInfo;
             this.actionTable = actionTable;
             lvActionList.ItemsSource = actionTable.action;
         }
 
-        private void UpdateInfo(string msg = "", UTIL.InfoType iType = UTIL.InfoType.message, bool async = false)
+        private void UpdateInfo(string msg = "", MyUtil.UTIL.InfoType iType = MyUtil.UTIL.InfoType.message, bool async = false)
         {
             updateInfo?.Invoke(msg, iType, async);
         }
@@ -121,7 +122,7 @@ namespace MyAlphaRobot.uc
             int byteCnt = Encoding.UTF8.GetByteCount(tbActionName.Text.Trim());
             if (byteCnt > 20)
             {
-                UpdateInfo(String.Format("New name has {0} bytes in UTF-8 encoding, only 20 bytes is allowed.", byteCnt), UTIL.InfoType.error);
+                UpdateInfo(String.Format("New name has {0} bytes in UTF-8 encoding, only 20 bytes is allowed.", byteCnt), MyUtil.UTIL.InfoType.error);
                 return;
             }
             ai.actionName = tbActionName.Text.Trim();
@@ -157,6 +158,11 @@ namespace MyAlphaRobot.uc
         private void btnDeletePose_Click(object sender, RoutedEventArgs e)
         {
             DeletePose?.Invoke(this, new EventArgs());
+        }
+
+        private void btnCopyToEnd_Click(object sender, RoutedEventArgs e)
+        {
+            CopyToEnd?.Invoke(this, new EventArgs());
         }
 
     }

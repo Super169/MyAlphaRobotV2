@@ -9,6 +9,8 @@ namespace MyAlphaRobot.data
 
     public class BoardConfig
     {
+        public const byte MIN_VERSION = 1;
+
         private const byte DATA_SIZE = 60;
         private const byte CONFIG_DATA_SIZE = 56;
         private const byte MAX_TOUCH_ACTION = 4;
@@ -20,28 +22,36 @@ namespace MyAlphaRobot.data
             public const byte ENABLE_DEBUG = 05;
             public const byte CONNECT_ROUTER = 06;
             public const byte ENABLE_OLED = 07;
-            public const byte ENABLE_TOUCH = 08;
-            public const byte REF_VOLTAGE = 10;
-            public const byte MIN_VOLTAGE = 12;
-            public const byte MAX_VOLTAGE = 14;
-            public const byte ALARM_VOLTAGE = 16;
-            public const byte ALARM_MP3 = 18;
-            public const byte ALARM_INTERVAL = 19;
+
+            public const byte BATTERY_REF_VOLTAGE = 10;
+            public const byte BATTERY_MIN_VALUE = 12;
+            public const byte BATTERY_MAX_VALUE = 14;
+            public const byte BATTERY_CHECK_SEC = 18;
+            public const byte BATTERY_ALARM_SEC = 19;
+
             public const byte MAX_SERVO = 21;
             public const byte MAX_DETECT_RETRY = 22;
             public const byte MAX_COMMAND_WAIT_MS = 23;
             public const byte MAX_COMMAND_RETRY = 24;
+
             public const byte MP3_ENABLED = 31;
             public const byte MP3_VOLUME = 32;
             public const byte MP3_STARTUP = 33;
-            public const byte AUTO_STAND = 41;
-            public const byte AUTO_FACE_UP = 42;
-            public const byte AUTO_FACE_DOWN = 43;
-            public const byte TOUCH_ACTION = 44;
+
+            public const byte PSX_ENABLED = 35;
+            public const byte PSX_CHECK_MS = 36;
+            public const byte PSX_NO_EVENT_MS = 37;
+            public const byte PSX_IGNORE_REPEAT_MS = 38;
+            public const byte PSX_SHOCK = 40;
+
+            public const byte MPU_ENABLED = 41;
+            public const byte MPU_CHECK_FREQ = 42;
+            public const byte MPU_POSITION_CHECK_FREQ =43;
+
+            public const byte TOUCH_ENABLED = 47;
             public const byte TOUCH_DETECT_PERIOD = 48;
             public const byte TOUCH_RELEASE_PERIOD = 50;
-            public const byte MPU_CHECK_FREQ = 52;
-            public const byte POSITION_CHECK_FREQ = 53;
+
         };
 
         public byte[] data = new byte[DATA_SIZE];
@@ -55,6 +65,11 @@ namespace MyAlphaRobot.data
         {
             data[offset] = (byte)(value / 256);
             data[offset + 1] = (byte)(value & 0xFF);
+        }
+
+        public byte version
+        {
+            get { return this.data[OFFSET.VERSION]; }
         }
 
         public bool enableDebug
@@ -75,10 +90,45 @@ namespace MyAlphaRobot.data
             set { this.data[OFFSET.ENABLE_OLED] = (byte)(value ? 1 : 0); }
         }
 
-        public bool enableTouch
+
+        public UInt16 batteryRefVoltage
         {
-            get { return (this.data[OFFSET.ENABLE_TOUCH] == 1); }
-            set { this.data[OFFSET.ENABLE_TOUCH] = (byte)(value ? 1 : 0); }
+            get { return getUInt16(OFFSET.BATTERY_REF_VOLTAGE); }
+            set { setUInt16(OFFSET.BATTERY_REF_VOLTAGE, value); }
+        }
+
+        public UInt16 batteryMinValue
+        {
+            get { return getUInt16(OFFSET.BATTERY_MIN_VALUE); }
+            set { setUInt16(OFFSET.BATTERY_MIN_VALUE, value); }
+        }
+
+        public UInt16 batteryMaxValue
+        {
+            get { return getUInt16(OFFSET.BATTERY_MAX_VALUE); }
+            set { setUInt16(OFFSET.BATTERY_MAX_VALUE, value); }
+        }
+
+        public byte batteryCheckSec
+        {
+            get { return data[OFFSET.BATTERY_CHECK_SEC]; }
+            set { data[OFFSET.BATTERY_CHECK_SEC] = value; }
+        }
+
+        public byte batteryAlarmSec
+        {
+            get { return data[OFFSET.BATTERY_ALARM_SEC]; }
+            set { data[OFFSET.BATTERY_ALARM_SEC] = value; }
+        }
+
+
+
+        #region Touch Sensor related
+
+        public bool touchEnabled
+        {
+            get { return (this.data[OFFSET.TOUCH_ENABLED] == 1); }
+            set { this.data[OFFSET.TOUCH_ENABLED] = (byte)(value ? 1 : 0); }
         }
 
         public UInt16 touchDetectPeriod
@@ -93,42 +143,7 @@ namespace MyAlphaRobot.data
             set { setUInt16(OFFSET.TOUCH_RELEASE_PERIOD, value); }
         }
 
-        public UInt16 voltageRef
-        {
-            get { return getUInt16(OFFSET.REF_VOLTAGE); }
-            set { setUInt16(OFFSET.REF_VOLTAGE, value); }
-        }
-
-        public UInt16 voltageLow
-        {
-            get { return getUInt16(OFFSET.MIN_VOLTAGE); }
-            set { setUInt16(OFFSET.MIN_VOLTAGE, value); }
-        }
-
-        public UInt16 voltageHigh
-        {
-            get { return getUInt16(OFFSET.MAX_VOLTAGE); }
-            set { setUInt16(OFFSET.MAX_VOLTAGE, value); }
-        }
-
-        public UInt16 voltageAlarm
-        {
-            get { return getUInt16(OFFSET.ALARM_VOLTAGE); }
-            set { setUInt16(OFFSET.ALARM_VOLTAGE, value); }
-        }
-
-        public byte voltageAlarmMp3
-        {
-            get { return data[OFFSET.ALARM_MP3]; }
-            set { data[OFFSET.ALARM_MP3] = value; }
-        }
-
-        public byte voltageAlarmInterval
-        {
-            get { return data[OFFSET.ALARM_INTERVAL]; }
-            set { data[OFFSET.ALARM_INTERVAL] = value; }
-        }
-
+        #endregion
         public byte maxServo
         {
             get { return data[OFFSET.MAX_SERVO]; }
@@ -153,7 +168,7 @@ namespace MyAlphaRobot.data
             set { data[OFFSET.MAX_COMMAND_RETRY] = value; }
         }
 
-        public bool enableMp3
+        public bool mp3Enabled
         {
             get { return (this.data[OFFSET.MP3_ENABLED] == 1); }
             set { this.data[OFFSET.MP3_ENABLED] = (byte)(value ? 1 : 0); }
@@ -172,37 +187,10 @@ namespace MyAlphaRobot.data
             set { data[OFFSET.MP3_STARTUP] = value; }
         }
 
-
-        public bool autoStand
+        public bool mpuEnabled
         {
-            get { return (this.data[OFFSET.AUTO_STAND] == 1); }
-            set { this.data[OFFSET.AUTO_STAND] = (byte)(value ? 1 : 0); }
-        }
-
-        public byte autoStandFaceUp
-        {
-            get { return data[OFFSET.AUTO_FACE_UP]; }
-            set { data[OFFSET.AUTO_FACE_UP] = value; }
-        }
-
-        public byte autoStandFaceDown
-        {
-            get { return data[OFFSET.AUTO_FACE_DOWN]; }
-            set { data[OFFSET.AUTO_FACE_DOWN] = value; }
-        }
-
-
-        public byte touchAction(byte id)
-        {
-            if (id >= MAX_TOUCH_ACTION) return TOUCH_NO_ACTION;
-            return data[OFFSET.TOUCH_ACTION + id];
-        }
-
-        public bool setTouchAction(byte id, byte action)
-        {
-            if (id >= MAX_TOUCH_ACTION) return false;
-            data[OFFSET.TOUCH_ACTION + id] = action;
-            return true;
+            get { return (this.data[OFFSET.MPU_ENABLED] == 1); }
+            set { this.data[OFFSET.MPU_ENABLED] = (byte)(value ? 1 : 0); }
         }
 
         public byte mpuCheckFreq
@@ -211,10 +199,40 @@ namespace MyAlphaRobot.data
             set { data[OFFSET.MPU_CHECK_FREQ] = value; }
         }
 
-        public byte positionCheckFreq
+        public byte mpuPositionCheckFreq
         {
-            get { return data[OFFSET.POSITION_CHECK_FREQ]; }
-            set { data[OFFSET.POSITION_CHECK_FREQ] = value; }
+            get { return data[OFFSET.MPU_POSITION_CHECK_FREQ]; }
+            set { data[OFFSET.MPU_POSITION_CHECK_FREQ] = value; }
+        }
+
+        public bool psxEnabled
+        {
+            get { return (this.data[OFFSET.PSX_ENABLED] == 1); }
+            set { this.data[OFFSET.PSX_ENABLED] = (byte)(value ? 1 : 0); }
+        }
+
+        public byte psxCheckMs
+        {
+            get { return this.data[OFFSET.PSX_CHECK_MS]; }
+            set { this.data[OFFSET.PSX_CHECK_MS] =  value; }
+        }
+
+        public byte psxNoEventMs
+        {
+            get { return this.data[OFFSET.PSX_NO_EVENT_MS]; }
+            set { this.data[OFFSET.PSX_NO_EVENT_MS] = value; }
+        }
+
+        public UInt16 psxIgnoreRepeatMs
+        {
+            get { return getUInt16(OFFSET.PSX_IGNORE_REPEAT_MS); }
+            set { setUInt16(OFFSET.PSX_IGNORE_REPEAT_MS, value); }
+        }
+
+        public bool psxShock
+        {
+            get { return (this.data[OFFSET.PSX_SHOCK] == 1); }
+            set { this.data[OFFSET.PSX_SHOCK] = (byte)(value ? 1 : 0); }
         }
 
 

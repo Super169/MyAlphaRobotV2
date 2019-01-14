@@ -27,7 +27,7 @@ namespace MyAlphaRobot.uc
 
         private void tb_PreviewInteger(object sender, TextCompositionEventArgs e)
         {
-            UTIL.INPUT.PreviewInteger(ref e);
+            MyUtil.UTIL.INPUT.PreviewInteger(ref e);
         }
 
         public void Refresh(data.ComboItem ci)

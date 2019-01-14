@@ -24,6 +24,7 @@ namespace MyAlphaRobot
         private StringBuilder sbLog = new StringBuilder();
         Stm8SendData sendData = new Stm8SendData();
         bool hexFileReady = false;
+        bool writeSend = true;
 
         Thread TBurn = null;
 
@@ -70,7 +71,7 @@ namespace MyAlphaRobot
             {
                 if (TBurn.ThreadState != ThreadState.Stopped)
                 {
-                    UpdateInfo("Burding in action....", UTIL.InfoType.error);
+                    UpdateInfo("Burding in action....", MyUtil.UTIL.InfoType.error);
                     return;
                 }
                 TBurn = null;
@@ -109,41 +110,60 @@ namespace MyAlphaRobot
 
         private void GoBurn()
         {
+            writeSend = true;
             UpdateInfo("偵測舵機");
             UpdateLog("偵測舵機.\r\n=> ", true);
             bool waitReply = true;
             int sendCnt = 0;
             int maxSend = 500;
             byte lastByte = 0;
+            receiveBuffer.Clear();
             while (waitReply)
             {
                 if (sendCnt > maxSend)
                 {
                     UpdateLog("\r\n\r\n偵測超時: 舵機沒回應", true);
-                    UpdateInfo("偵測超時: 舵機沒回應", UTIL.InfoType.error);
+                    UpdateInfo("偵測超時: 舵機沒回應", MyUtil.UTIL.InfoType.error);
                     return;
                 }
 
+                if (!writeSend)
+                {
+                    writeSend = true;
+                    UpdateLog("\r\n=> ", true);
+                }
                 SerialSendByte(0xA5, true);
                 Thread.Sleep(10);
                 sendCnt++;
 
                 while (receiveBuffer.Count > 0)
                 {
+                    writeSend = false;
                     UpdateLog("\r\n<= ", true);
                     lastByte = receiveBuffer[0];
                     UpdateLog(String.Format(" {0:X2}", lastByte), true);
-                    // Just for safety, differnt response from servo, A0 & A1 may cause by previous incomplete write
-                    if ((lastByte == 0xA9) || (lastByte == 0xE9) || (lastByte == 0xA1) || (lastByte == 0xA0))
+                    receiveBuffer.RemoveAt(0);
+
+                    if ((lastByte == 0xA9) || (lastByte == 0xA1) || (lastByte == 0xA0))
                     {
                         waitReply = false;
+                        break;
                     }
-                    receiveBuffer.RemoveAt(0);
                 }
 
             }
 
-            if ((lastByte == 0xA0) || (lastByte == 0xA1))
+            // cleanup buffer, just for safety
+            Thread.Sleep(1000);
+            if (receiveBuffer.Count > 0)
+            {
+                for (int i = 0; i < receiveBuffer.Count; i++) UpdateLog(String.Format(" {0:X2}", receiveBuffer[i]), true);
+            }
+            receiveBuffer.Clear();
+
+            // for very very very rare case, the data can complete a previous transaction, and got a A0 return.  
+            // It's almost mission impossible, just keep the logic for safety check
+            if (lastByte == 0xA0)
             {
                 string s1 = "偵測到之前燒錄未完成";
                 string s2 = "安全起見, 請重置舵機, 再次重新燒錄.";
@@ -152,6 +172,7 @@ namespace MyAlphaRobot
                 MessageBox.Show(s2, s1);
                 return;
             }
+
             UpdateInfo("燒錄進行中, 請耐心等待......");
             UpdateLog("\r\n\r\n開始燒錄......\r\n", true);
             double nPage = sendData.Count;
@@ -163,32 +184,41 @@ namespace MyAlphaRobot
             for (int i = 0; i < sendData.Count; i++)
             {
                 Stm8HexData hd = sendData.GetHexData(i);
-                if (!SendHexDate(hd, i)) return;
+                if (!SendHexDate(hd, i))
+                {
+                    UpdateInfo(string.Format("Error sending page {0}", i));
+                    return;
+                }
                 UpdatePorgress((double)100.0 * i / nPage);
             }
             for (int i = endPage + 1; i < 0x80; i++)
             {
                 Stm8HexData hd = new Stm8HexData(i);
                 hd.Reset();
-                if (!SendHexDate(hd, 999)) return;
+                if (!SendHexDate(hd, 999))
+                {
+                    UpdateInfo("Error sending last page");
+                    return;
+                }
                 UpdatePorgress((double)100.0 * (sendData.Count + i) / nPage);
             }
             UpdatePorgress(100);
 
             UpdateLog("\r\n=> ");
             SerialSendByte(0xA9);
+            /*
             if (WaitServoReturn(out lastByte))
             {
                 if (lastByte == 0xA0)
                 {
-                    UpdateLog("\r\n\r\n燒錄完成\r\n", true);
+                    UpdateLog("\r\n\r\n燒錄順利完成\r\n", true);
                     UpdateInfo("燒錄順利完成");
                     return;
                 }
             }
-
-            UpdateLog("\r\n\r\n燒錄完成, 但終結的 0xA9 沒回傳 A0\r\n", true);
-            UpdateInfo("燒錄完成, 但終結的 0xA9 沒回傳");
+            */
+            UpdateLog("\r\n\r\n燒錄完成\r\n", true);
+            UpdateInfo("燒錄完成");
             return;
 
         }
@@ -210,13 +240,21 @@ namespace MyAlphaRobot
                     if (!WriteStm8HexData(hd, out servoResponse))
                     {
                         UpdateLog("\r\n\r\n燒錄失敗......\r\n", true);
-                        return false;
-                    }
-                    if (servoResponse == 0xA0) break;
-                    if (servoResponse != 0xA1)
+                        // This case may retry 
+                        // return false;
+                    } else
                     {
-                        UpdateLog("\r\n\r\n回傳不正常, 燒錄停止......\r\n", true);
-                        return false;
+                        if (servoResponse == 0xA0) break;
+                        
+                        // retry for any case even A1
+                        /*
+                        if (servoResponse != 0xA1)
+                        {
+                            UpdateLog("\r\n\r\n回傳不正常, 燒錄停止......\r\n", true);
+                            // return false;
+                        }
+                        */
+
                     }
                 }
                 UpdateProgress("ERR ");
@@ -275,6 +313,8 @@ namespace MyAlphaRobot
                 UpdateLog(" .");
                 cnt++;
             }
+            /*
+            // Check if it really need to be removed
             SerialSendByte(0xA5);
             Thread.Sleep(100);
             if (receiveBuffer.Count > 0)
@@ -284,6 +324,7 @@ namespace MyAlphaRobot
                 lastByte = 0xA1;  // Treat as fail, and force retry
                 return true;
             }
+            */
             UpdateLog("\r\n操作超時: 舵機沒回應");
             return false;
         }

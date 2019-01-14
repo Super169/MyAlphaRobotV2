@@ -28,7 +28,11 @@
                             <ImageBrush ImageSource="../images/refresh.png" />
                         </Button.Background>
                     </Button>
-                    <Button x:Name="btnConnect" Content="連線" Margin="173,6,0,5" VerticalAlignment="Center" Click="btnConnect_Click" HorizontalAlignment="Left" Width="70"/>
+                    <ComboBox x:Name="cboGPIO" HorizontalAlignment="Left" Margin="180,0,0,0" VerticalAlignment="Center" Width="80">
+                        <ComboBoxItem Content="Servo"></ComboBoxItem>
+                        <ComboBoxItem Content="SubSystem" IsSelected="True" ></ComboBoxItem>
+                    </ComboBox>
+                    <Button x:Name="btnConnect" Content="連線" Margin="325,6,0,5" VerticalAlignment="Center" Click="btnConnect_Click" HorizontalAlignment="Left" Width="70"/>
                     <Button x:Name="btnLoadFile" Content="截入固件" HorizontalAlignment="Right" Margin="0,5,10,5" VerticalAlignment="Center" Width="70" Click="btnLoadFile_Click"/>
                 </Grid>
                 <Grid Grid.Row="1">

@@ -1,0 +1,130 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <script src="<blocklyUrl>/blockly_compressed.js"></script>
+    <script src="<blocklyUrl>/blocks_compressed.js"></script>
+    <script src="<blocklyUrl>/javascript_compressed.js"></script>
+    <script src="<blocklyUrl>/msg/js/zh-hans.js"></script>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background-color: #fff;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-weight: normal;
+            font-size: 140%;
+        }
+
+        table {
+            height: 100%;
+            width: 100%;
+        }
+
+        #blocklyArea {
+            height: 99%;
+        }
+    </style>
+</head>
+<body onload="pageOnLoad()">
+    <table>
+        <tr>
+            <td id="blocklyArea"></td>
+        </tr>
+    </table>
+
+    <div id="blocklyDiv" style="position: absolute"></div>
+    <script id="custom_blocks">
+
+        /* custom_blocks.js */
+
+    </script>
+
+    <!-- toolbox.xml -->
+    <!-- workspace.xml -->
+
+
+    <script>
+
+        var blocklyArea = document.getElementById('blocklyArea');
+        var blocklyDiv = document.getElementById('blocklyDiv');
+
+        var myWorkspace = Blockly.inject(blocklyDiv,
+            {
+                media: '../blockly/media/',
+                toolbox: document.getElementById('toolbox')
+            });
+
+        var onresize = function (e) {
+            // Compute the absolute coordinates and dimensions of blocklyArea.
+            var element = blocklyArea;
+            var x = 0;
+            var y = 0;
+            do {
+                x += element.offsetLeft;
+                y += element.offsetTop;
+                element = element.offsetParent;
+            } while (element);
+            // Position blocklyDiv over blocklyArea.
+            blocklyDiv.style.left = x + 'px';
+            blocklyDiv.style.top = y + 'px';
+            blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+            blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+            Blockly.svgResize(myWorkspace);
+        };
+
+        window.addEventListener('resize', onresize, false);
+        onresize();
+        Blockly.svgResize(myWorkspace);
+
+        var workspaceBlocks = document.getElementById("workspaceBlocks");
+        // Load blocks to workspace.
+        // It must be done after Blockly resize, so that the object will be display properly based on display size
+        Blockly.Xml.domToWorkspace(workspaceBlocks, myWorkspace);
+
+
+        function pageOnLoad() {
+
+        }
+
+        function init(toolboxXML, workspaceXML) {
+            myWorkspace = Blockly.inject('blocklyDiv',
+                { media: '../../media/', toolbox: toolboxXML });
+            window.addEventListener('resize', onresize, false);
+            onresize();
+            var wx = Blockly.Xml.textToDom(workspaceXML)
+            Blockly.Xml.domToWorkspace(wx, myWorkspace);
+        }
+
+        function getXml() {
+            var xmlDom = Blockly.Xml.workspaceToDom(myWorkspace);
+            var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+            return xmlText;
+        }
+        function loadWorkspace(workspaceXML) {
+            myWorkspace.clear();
+            var wx = Blockly.Xml.textToDom(workspaceXML)
+            Blockly.Xml.domToWorkspace(wx, myWorkspace);
+        }
+
+
+        function ClearSettings() {
+            var count = myWorkspace.getAllBlocks().length;
+            if (count < 2 || window.confirm("清除所有事件设定?")) {
+                myWorkspace.clear();
+                var workspaceBlocks = document.getElementById("workspaceBlocks");
+                Blockly.Xml.domToWorkspace(workspaceBlocks, myWorkspace);
+            }
+        }
+
+    </script>
+</body>
+</html>

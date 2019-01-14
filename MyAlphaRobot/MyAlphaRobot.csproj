@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\CefSharp.Wpf.69.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.69.0.0\build\CefSharp.Wpf.props')" />
+  <Import Project="..\packages\CefSharp.Common.69.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.69.0.0\build\CefSharp.Common.props')" />
+  <Import Project="..\packages\cef.redist.x86.3.3497.1841\build\cef.redist.x86.props" Condition="Exists('..\packages\cef.redist.x86.3.3497.1841\build\cef.redist.x86.props')" />
+  <Import Project="..\packages\cef.redist.x64.3.3497.1841\build\cef.redist.x64.props" Condition="Exists('..\packages\cef.redist.x64.3.3497.1841\build\cef.redist.x64.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,6 +17,23 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,9 +57,35 @@
   <PropertyGroup>
     <ApplicationIcon>images\alpha1s_icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <HintPath>..\packages\Ionic.Zip.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -68,9 +115,17 @@
     <Compile Include="data\ComboInfo.cs" />
     <Compile Include="data\ComboItem.cs" />
     <Compile Include="data\ComboTable.cs" />
+    <Compile Include="data\NetworkConfig.cs" />
+    <Compile Include="Event Handler\RobotHandler.cs" />
+    <Compile Include="Event Handler\RobotHandler_Action.cs" />
+    <Compile Include="Event Handler\RobotHandler_Condition.cs" />
+    <Compile Include="Event Handler\RobotHandler_Event.cs" />
+    <Compile Include="data\RobotInfo.cs" />
+    <Compile Include="MainWindow_Connection.cs" />
+    <Compile Include="Event Handler\BLOCKLY.cs" />
+    <Compile Include="system\RCVersion.cs" />
+    <Compile Include="system\REGKEY.cs" />
     <Compile Include="system\SYSTEM.cs" />
-    <Compile Include="MainWindow_BoardConfig.cs" />
-    <Compile Include="MainWindow_ServoMaintenance.cs" />
     <Compile Include="Stm8\Stm8HexData.cs" />
     <Compile Include="Stm8\Stm8SendData.cs" />
     <Compile Include="uc\UcComboDisplay.xaml.cs">
@@ -82,7 +137,20 @@
     <Compile Include="uc\UcComboEdit.xaml.cs">
       <DependentUpon>UcComboEdit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UTIL.FILE.cs" />
+    <Compile Include="uc\UcMain_ControlBoard.xaml.cs">
+      <DependentUpon>UcMain_ControlBoard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcMain_Servo.xaml.cs">
+      <DependentUpon>UcMain_Servo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcMain_Servo_HaiLzd.xaml.cs">
+      <DependentUpon>UcMain_Servo_HaiLzd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcMain_Servo_UBT.xaml.cs">
+      <DependentUpon>UcMain_Servo_UBT.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="uc\UcMain_Servo__base.cs" />
+    <Compile Include="uc\UcMain__parent.cs" />
     <Compile Include="MainWindow_Config.cs" />
     <Compile Include="system\CONST.cs" />
     <Compile Include="data\ActionInfo.cs" />
@@ -120,9 +188,23 @@
     <Compile Include="Stm8\WinStm8Writer.xaml.cs">
       <DependentUpon>WinStm8Writer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UTIL.INPUT.cs" />
     <Compile Include="UTIL.SERIAL.cs" />
-    <Compile Include="win\WinRobotMaintenance.xaml.cs">
+    <Compile Include="Win\FirmwareUpdate\WinFirmwareUpdate.xaml.cs">
+      <DependentUpon>WinFirmwareUpdate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Win\FirmwareUpdate\WinFirmwareUpdate_ESP.cs" />
+    <Compile Include="Win\FirmwareUpdate\WinFirmwareUpdate_Flash.cs" />
+    <Compile Include="Win\FirmwareUpdate\WinFirmwareUpdate_Serial.cs" />
+    <Compile Include="Win\SystemConfig\WinSystemConfig.xaml.cs">
+      <DependentUpon>WinSystemConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Win\EventBuilder\WinEventHandler.xaml.cs">
+      <DependentUpon>WinEventHandler.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Win\EventBuilder\WinEventHandler_Blockly.cs" />
+    <Compile Include="Win\EventBuilder\WinEventHandler_BuildObject.cs" />
+    <Compile Include="Win\EventBuilder\WinEventHandler_Config.cs" />
+    <Compile Include="Win\RobotMaintenance\WinRobotMaintenance.xaml.cs">
       <DependentUpon>WinRobotMaintenance.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
@@ -146,6 +228,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="uc\UcComboEdit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcMain_ControlBoard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcMain_Servo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcMain_Servo_HaiLzd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="uc\UcMain_Servo_UBT.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -177,7 +275,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="win\WinRobotMaintenance.xaml">
+    <Page Include="Win\FirmwareUpdate\WinFirmwareUpdate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Win\SystemConfig\WinSystemConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Win\EventBuilder\WinEventHandler.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Win\RobotMaintenance\WinRobotMaintenance.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -185,7 +295,6 @@
   <ItemGroup>
     <Compile Include="MainWindow_Core.cs" />
     <Compile Include="MainWindow_EventHandler.cs" />
-    <Compile Include="MainWindow_SerialPort.cs" />
     <Compile Include="MainWindow_Utilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -230,5 +339,54 @@
   <ItemGroup>
     <Resource Include="images\Alpha1s_Icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Themes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="_www\custom_blocks.js" />
+    <EmbeddedResource Include="_www\EventBuilder.html" />
+    <None Include="_www\SampleWorkspace.xml" />
+    <EmbeddedResource Include="_www\toolbox.xml" />
+    <EmbeddedResource Include="_www\workspace.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sample.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Event Handler\Readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyUtil\MyUtil.csproj">
+      <Project>{4c4a6dad-6613-4168-9c84-f5e918f2908e}</Project>
+      <Name>MyUtil</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\cef.redist.x64.3.3497.1841\build\cef.redist.x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.3497.1841\build\cef.redist.x64.props'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x86.3.3497.1841\build\cef.redist.x86.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.3497.1841\build\cef.redist.x86.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.69.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.69.0.0\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.69.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.69.0.0\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Wpf.69.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.69.0.0\build\CefSharp.Wpf.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Wpf.69.0.0\build\CefSharp.Wpf.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.69.0.0\build\CefSharp.Wpf.targets'))" />
+  </Target>
+  <Import Project="..\packages\CefSharp.Common.69.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.69.0.0\build\CefSharp.Common.targets')" />
+  <Import Project="..\packages\CefSharp.Wpf.69.0.0\build\CefSharp.Wpf.targets" Condition="Exists('..\packages\CefSharp.Wpf.69.0.0\build\CefSharp.Wpf.targets')" />
 </Project>

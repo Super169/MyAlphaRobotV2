@@ -1,0 +1,146 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block id="#w34V6CrtE9PyH4GQ.d," type="status_idle" y="0" x="0" deletable="false" movable="false">
+    <next>
+      <block id="(oa^Fr~?Q_,e(13$j~bV" type="event_handler">
+        <value name="condition">
+          <block id="vh1K}lAQyDAk;JHga7iT" type="cond_mpu6050">
+            <field name="axis">3</field>
+            <field name="axis_check">2</field>
+            <field name="axis_value">-14400</field>
+          </block>
+        </value>
+        <value name="action">
+          <block id="B|0fbHq)*rxl|tXN=|Y]" type="action_play_action">
+            <field name="action_id">5</field>
+          </block>
+        </value>
+        <next>
+          <block id="2p~NZ+tFBO_@4ny,lbdc" type="event_handler">
+            <value name="condition">
+              <block id="kMl3SZwzoG)(K_oo4;i:" type="cond_mpu6050">
+                <field name="axis">3</field>
+                <field name="axis_check">1</field>
+                <field name="axis_value">14400</field>
+              </block>
+            </value>
+            <value name="action">
+              <block id="tn(zb0SJSPkWS4D)!Y8#" type="action_play_action">
+                <field name="action_id">6</field>
+              </block>
+            </value>
+            <next>
+              <block id="GT]+`:F=+Rd279]S%1Am" type="event_handler">
+                <value name="condition">
+                  <block id="z5-,]mN57/a7^g-;@nZQ" type="cond_touch">
+                    <field name="touch_status">1</field>
+                  </block>
+                </value>
+                <value name="action">
+                  <block id=";t!jt~~my}sKK,?Krx}a" type="action_play_action">
+                    <field name="action_id">11</field>
+                  </block>
+                </value>
+                <next>
+                  <block id="E]o^F!.g(=4nn4N_#R}]" type="event_handler">
+                    <value name="condition">
+                      <block id="KNCa5yLfR#vcV`L}J#Ii" type="cond_touch">
+                        <field name="touch_status">1</field>
+                      </block>
+                    </value>
+                    <value name="action">
+                      <block id="wB0+x`PD}B,_}-6KfzLI" type="action_play_action">
+                        <field name="action_id">12</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block id="N*c;gPv_eEYB+cFwfnoR" type="event_handler">
+                        <value name="condition">
+                          <block id=".#ZlbKb)+`kGGceG-No)" type="cond_touch">
+                            <field name="touch_status">1</field>
+                          </block>
+                        </value>
+                        <value name="action">
+                          <block id="r8TAaSw)Gtw=nPp[6~sa" type="action_play_action">
+                            <field name="action_id">13</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block id=".//)Qs|zL;wn8j@$a-z." type="event_handler">
+                            <value name="condition">
+                              <block id="B?=|.GD?H!h!.cBVqP{E" type="cond_touch">
+                                <field name="touch_status">1</field>
+                              </block>
+                            </value>
+                            <value name="action">
+                              <block id="bI|d+jlh5]jt_/@1HsJY" type="action_play_action">
+                                <field name="action_id">14</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block id="zY4$7-PUp^b^nr[x@Z{3" type="event_handler">
+                                <value name="condition">
+                                  <block id=",RWLN:wLm2h1Q},!,=f:" type="cond_battery_level">
+                                    <field name="battery_level">10</field>
+                                  </block>
+                                </value>
+                                <value name="action">
+                                  <block id="U.*?R8,_wP;V=brAL}j$" type="action_mp3_play_mp3">
+                                    <field name="mp3_file">2</field>
+                                  </block>
+                                </value>
+                                <next>
+                                  <block id="B/z$O]+pye%~8{e-sluH" type="event_handler">
+                                    <value name="condition">
+                                      <block id="5UpF$z,tkJK|}[.Uc+KJ" type="cond_battery_level">
+                                        <field name="battery_level">30</field>
+                                      </block>
+                                    </value>
+                                    <value name="action">
+                                      <block id="g.1([4W3L=l8?;B~W[6s" type="action_mp3_play_mp3">
+                                        <field name="mp3_file">3</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+  <block id="ZfivkurpQ^}I|rS:^MA)" type="status_playing" y="0" x="400" deletable="false" movable="false">
+    <next>
+      <block id="v!IS/cb~UZN5rMN#_WCo" type="event_handler">
+        <value name="condition">
+          <block id=":Ow~Pwk1tn#3+bD)n9W)" type="cond_battery_level">
+            <field name="battery_level">10</field>
+          </block>
+        </value>
+        <value name="action">
+          <block id="-*WGsFKt;v_!KO-5-b~t" type="action_stop_action" />
+        </value>
+        <next>
+          <block id="i(BU/KzG?cfa:;D9DL)J" type="event_handler">
+            <value name="condition">
+              <block id="TLW[{_6g_;ViU%d7WtJ," type="cond_psx_button">
+                <field name="psx_button">KEY_CIRCLE</field>
+              </block>
+            </value>
+            <value name="action">
+              <block id="((58?!K.8H@i|{!SQiTB" type="action_stop_action" />
+            </value>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>

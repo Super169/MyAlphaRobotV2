@@ -36,7 +36,7 @@ namespace MyAlphaRobot
         private void btnLoadImage_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = UTIL.FILE.GetConfigFilePath();
+            openFileDialog.InitialDirectory = SYSTEM.configPath;
             //            openFileDialog.Filter = "JPG|*.jpg|PNG|*.png|AL (*.*)|*.*";
             openFileDialog.Filter = "Image file (JPG, PNG, BMP)|*.jpg;*.png;*.bmp|AL (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
@@ -48,12 +48,12 @@ namespace MyAlphaRobot
         private void btnLoadConfig_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = UTIL.FILE.GetConfigFilePath();
+            openFileDialog.InitialDirectory = SYSTEM.configPath;
             openFileDialog.Filter = CONST.ROBOT_CONFIG_FILTER;
             if (openFileDialog.ShowDialog() == true)
             {
                 string fileName = openFileDialog.FileName.Trim();
-                ConfigObject co = UTIL.FILE.RestoreDataFile<ConfigObject>(fileName);
+                ConfigObject co = MyUtil.FILE.RestoreDataFile<ConfigObject>(fileName);
                 if (!Object.ReferenceEquals(co, null))
                 {
                     ucRobotMaintenance.SetConfig(co);
@@ -64,14 +64,14 @@ namespace MyAlphaRobot
         private void btnSaveConfig_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.InitialDirectory = UTIL.FILE.GetConfigFilePath();
+            saveFileDialog.InitialDirectory = SYSTEM.configPath;
             saveFileDialog.Filter = CONST.ROBOT_CONFIG_FILTER;
-            saveFileDialog.FileName = CONST.DEFAULT_ROBOT_CONFIG;
+            saveFileDialog.FileName = CONST.DEFAULT_CONFIG.ROBOT_CONFIG_FILE;
             if (saveFileDialog.ShowDialog() == true)
             {
                 string fileName = saveFileDialog.FileName.Trim();
                 ConfigObject co = ucRobotMaintenance.GetConfigObject();
-                UTIL.FILE.SaveDataFile(co, fileName);
+                MyUtil.FILE.SaveDataFile(co, fileName);
             }
         }
 

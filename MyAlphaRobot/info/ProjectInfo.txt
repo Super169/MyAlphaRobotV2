@@ -1,0 +1,26 @@
+RobotControl
+Version 2.2
+- Add Event Handler to define rebot response
+- Add support of sub-system board for PSX controller and other sensor device
+- Add USB-TTL mode for servo turning with ServoCommander
+  
+MyAlphaRobot
+Version 2.2
+- Add network connection to RobotControl
+- Add graphical UI (using google blockly) to define robot event
+- Add system configuration
+- Check robot firmware version, and update firmware directly from internet
+- Show MPU 6050 information
+- Option to disable robot reaction for action setup
+
+NuGet Package:
+  - CefSharp.Wpf                v69.0.0
+    - cef.redist.x64            v3.3497.1841
+    - cef.redist.x86            v3.3497.1841
+    - CefSharp.Common           v69.0.0
+  - Ionic.Zip                   v1.9.1.8
+  - WindowsAPICodePack-Core     v1.1.2
+  - WindowsAPICodePack-Shell    v1.1.1
+
+Other projects:  
+- MyUtil

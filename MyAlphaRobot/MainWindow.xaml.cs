@@ -23,7 +23,7 @@ namespace MyAlphaRobot
         public MainWindow()
         {
             InitializeComponent();
-            InitConfig();
+            // InitConfig();
             InitObjects();
         }
 

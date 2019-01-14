@@ -219,7 +219,7 @@ namespace MyAlphaRobot.data
             for (int i = 0; i < 60; i++) data[i] = 0;
             data[0] = 0xA9;
             data[1] = 0x9A;
-            data[2] = 0x38;
+            data[2] = CONST.CB.GET_ADHEADER.dataLen;  // GET.result len = SET.command len
             data[3] = CONST.CMD.UPD_ADHEADER;
             data[CONST.AI.HEADER.OFFSET.ID] = actionId;
             byte[] bActionName = Encoding.UTF8.GetBytes(actionName);
@@ -292,6 +292,16 @@ namespace MyAlphaRobot.data
             return poseId;
         }
 
+        public int CopyToEnd(UInt16 poseId)
+        {
+            UInt16 size = (UInt16)pose.Length;
+            int newId = pose.Length;
+            Array.Resize(ref pose, size + 1);
+            pose[newId] = new PoseInfo(actionId, poseId);
+            pose[newId].ReadFromArray(pose[poseId].GetData(), actionId, newId, 0);
+            pose[newId].poseId = (UInt16) newId;
+            return newId;
+        }
 
     }
 }

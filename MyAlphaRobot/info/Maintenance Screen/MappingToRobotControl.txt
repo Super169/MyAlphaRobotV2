@@ -1,0 +1,18 @@
+EdsBattery
+- minVoltage         : config.minVoltage()                  : 最低值
+- maxVoltage         : config.maxVoltage()                  : 最高值
+- normalCheckMs      : 5000                                 : 一般檢查間距  (秒) - new
+- alarmIntervalMs    : config.voltageAlarmInterval() * 1000 : 事件觸發後間距(秒)
+
+EdsTouch
+- gpioPin : 13
+- touchDetectPeriod  : config.touchDetectPeriod()  : 连击时间
+- touchReleasePeriod : config.touchReleasePeriod() : 感应间距
+
+EdsMpu6050
+- i2cAddr    : 0x68                                : N/A
+- threadhold :(1000 / config.positionCheckFreq())  : 姿态灵敏度  -> 確認時間 (ms)
+- elapseMs   : config.mpuCheckFreq()               : 探测灵敏度  -> 檢查間距 (ms)
+
+EdsPsxButton
+- *ssb : &ssb : N/A

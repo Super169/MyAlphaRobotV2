@@ -307,7 +307,7 @@ namespace MyAlphaRobot.data
             for (int i = 0; i < 60; i++) data[i] = 0;
             data[0] = 0xA9;
             data[1] = 0x9A;
-            data[2] = 0x38;
+            data[2] = CONST.CB.GET_ADPOSE.dataLen;  // GET.result len = SET.command len
             data[3] = CONST.CMD.UPD_ADPOSE;
             data[CONST.AI.POSE.OFFSET.ID] = actionId;
             data[CONST.AI.POSE.OFFSET.SEQ_HIGH] = (byte)((poseId >> 8) & 0xFF);

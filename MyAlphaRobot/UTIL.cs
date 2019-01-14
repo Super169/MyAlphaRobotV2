@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,70 +9,8 @@ using System.Web.Script.Serialization;
 
 namespace MyAlphaRobot
 {
-    public static partial class UTIL
+    public static partial class Util
     {
-        public static class KEY
-        {
-            public const string APP_PATH = "Software\\Super169\\MyAlphaRobot";
-            public const string LAST_CONNECTION = "Last Connection";
-            public const string LAST_LAYOUT = "Last Layout";
-            public const string SERVO_VERSION = "Servo Version";
-        }
-
-        public delegate void DelegateUpdateInfo(string msg = "", UTIL.InfoType iType = UTIL.InfoType.message, bool async = false);
-
-        public enum InfoType
-        {
-            message, alert, error
-        };
-
-        public static bool WriteRegistry(string key, object value)
-        {
-            bool success = false;
-            try
-            {
-                RegistryView platformView = (Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
-                RegistryKey registryBase = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, platformView);
-                if (registryBase == null) return false;
-                RegistryKey registryEntry = registryBase.CreateSubKey(KEY.APP_PATH);
-                if (registryEntry != null)
-                {
-                    registryEntry.SetValue(key, value);
-                    success = true;
-                    registryEntry.Close();
-                }
-                registryBase.Close();
-            }
-            catch (Exception)
-            {
-            }
-            return success;
-        }
-
-
-        public static object ReadRegistry(string key)
-        {
-            object value = null;
-            try
-            {
-                RegistryView platformView = (Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
-                RegistryKey registryBase = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, platformView);
-                if (registryBase == null) return null;
-                RegistryKey registryEntry = registryBase.OpenSubKey(KEY.APP_PATH);
-                if (registryEntry != null)
-                {
-                    value = registryEntry.GetValue(key);
-                    registryEntry.Close();
-                }
-                registryBase.Close();
-
-            }
-            catch (Exception)
-            {
-                value = null;
-            }
-            return value;
-        }
 
         public static bool getByte(string data, out byte value)
         {
@@ -144,5 +83,61 @@ namespace MyAlphaRobot
             return (UInt16)(data[offset] << 8 | data[offset + 1]);
         }
 
+        public static void CheckFirmware()
+        {
+            SYSTEM.firmwareBeta = MyUtil.WEB.GetTextFile(CONST.DISTRIBUTION.FIRMWARE.BETA.VERSION);
+            SYSTEM.firmwareRelease = MyUtil.WEB.GetTextFile(CONST.DISTRIBUTION.FIRMWARE.RELEASE.VERSION);
+            // mark as checked if any of them is available
+            SYSTEM.firmwareChecked = !(string.IsNullOrWhiteSpace(SYSTEM.firmwareBeta) && string.IsNullOrWhiteSpace(SYSTEM.firmwareRelease));
+
+        }
+
+        public static bool IsBeta(string version)
+        {
+            string[] v = version.Split('.');
+            if (v.Length != 4) return false;  // Invalid version number
+            return v[2] == "99";
+        }
+
+        public static bool IsLatest(string version)
+        {
+            if (!SYSTEM.firmwareChecked) CheckFirmware();
+            if (IsBeta(version) )
+            {
+                return version == SYSTEM.firmwareBeta;
+            }
+            return version == (IsBeta(version) ? SYSTEM.firmwareBeta : SYSTEM.firmwareRelease);
+        }
+
+
+        public static void SaveSystemConfig()
+        {
+            MyUtil.FILE.SaveDataFile(SYSTEM.sc, SYSTEM.systemConfigFile, CONST.SYSTEM_CONFIG_ZIP);
+        }
+
+        public static bool IsBlocklyPath(string path)
+        {
+            return (File.Exists(System.IO.Path.Combine(path, CONST.BLOCKLY.CHECK_FILE)));
+        }
+
+        public static bool GetBlocklyPath(ref string blocklyPath)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (!string.IsNullOrWhiteSpace(blocklyPath))
+            {
+                ofd.InitialDirectory = blocklyPath;
+            }
+            ofd.Filter = "Blockly File | " + CONST.BLOCKLY.CHECK_FILE;
+            if (ofd.ShowDialog() == true)
+            {
+                blocklyPath = System.IO.Path.GetDirectoryName(ofd.FileName);
+                if (IsBlocklyPath(blocklyPath))
+                {
+                    Util.SaveSystemConfig();
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

@@ -9,13 +9,34 @@ using System.Windows.Controls;
 
 namespace MyAlphaRobot
 {
-    public static partial class UTIL
+    public static partial class Util
     {
         public class SERIAL
         {
-            public static int FindPorts(string defaultPort, ComboBox cbo)
+            public static int FindPorts(string defaultPort, ComboBox cbo, int excludePort = 65535)
             {
-                cbo.ItemsSource = SerialPort.GetPortNames();
+                //cbo.ItemsSource = SerialPort.GetPortNames();
+                string[] ports = SerialPort.GetPortNames();
+                cbo.Items.Clear();
+                for (int i = 0; i < ports.Length; i++)
+                {
+                    string port = ports[i];
+                    if (port.StartsWith("COM"))
+                    {
+                        try
+                        {
+                            int portNum = int.Parse(port.Replace("COM", ""));
+                            // Try to exculde virtual ports
+                            if (portNum >= excludePort) port = "";
+                        }
+                        catch
+                        {
+                            port = "";
+                        }
+                    }
+                    if (port != "") cbo.Items.Add(port);
+                }
+
                 if (cbo.Items.Count > 0)
                 {
                     if (defaultPort == null)
@@ -37,12 +58,12 @@ namespace MyAlphaRobot
                 return cbo.Items.Count;
             }
 
-            public static bool Connect(SerialPort serialPort, String portName)
+            public static bool Connect(SerialPort serialPort, String portName, int baudRate = 115200)
             {
                 bool flag = false;
 
                 serialPort.PortName = portName;
-                serialPort.BaudRate = 115200;
+                serialPort.BaudRate = baudRate;
                 serialPort.Parity = Parity.None;
                 serialPort.DataBits = 8;
                 serialPort.StopBits = StopBits.One;

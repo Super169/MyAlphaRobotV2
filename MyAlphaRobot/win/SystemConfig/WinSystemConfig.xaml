@@ -1,0 +1,52 @@
+﻿<Window x:Class="MyAlphaRobot.WinSystemConfig"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyAlphaRobot"
+        mc:Ignorable="d"
+        Title="系统设定" Height="400" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Background="LightGreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <StackPanel>
+                <Grid Height="10" />
+                <Grid Height="30">
+                    <Label Content="机械人设定:" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="cboRobotConfig" Margin="80,0,5,0" VerticalAlignment="Top" Height="22"/>
+                </Grid>
+                <Grid Height="35">
+                    <Button x:Name="btnBlockly" Content="Blockly目录" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="70" Click="btnBlockly_Click"/>
+                    <TextBox x:Name="txtBlocklyPath" Height="23" Margin="80,4,5,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsReadOnly="True" Background="LightBlue"/>
+                </Grid>
+                <Grid Height="30" Visibility="Collapsed">
+                    <CheckBox x:Name="cbxAutoCheckVersion" Content="自动侦测上位机更新" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Grid>
+                <Grid Height="30">
+                    <CheckBox x:Name="cbxAutoCheckFirmware" Content="自动侦测机械人固件更新" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Grid>
+                <Grid Height="30">
+                    <CheckBox x:Name="cbxDisableBatteryUpdate" Content="停止电量更新" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Grid>
+                <Grid Height="30">
+                    <CheckBox x:Name="cbxDisableMpuUpdate" Content="停止陀螺仪更新" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Grid>
+                <Grid Height="60">
+                    <CheckBox x:Name="cbxDeveloperMode" Content="启用开发者模式" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                    <Label Margin="5,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="注意: " FontWeight="Bold"  Foreground="#FF800000"/>
+                    <TextBlock Margin="45,25,10,0"  TextWrapping="Wrap" Text="开发者模式下, 部份功能可能会破坏系统正常运作, 不建议一般用家开启使用." Foreground="#FF800000"/>
+                </Grid>
+
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Button x:Name="btnConfirm" Content="确定" HorizontalAlignment="Right" Margin="0,5,100,0" VerticalAlignment="Top" Width="75" Click="btnConfirm_Click"/>
+            <Button x:Name="btnCancel" Content="取消" HorizontalAlignment="Right" Margin="0,5,10,0" VerticalAlignment="Top" Width="75" Click="btnCancel_Click"/>
+
+        </Grid>
+
+    </Grid>
+</Window>

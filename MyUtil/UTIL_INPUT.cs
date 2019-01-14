@@ -9,12 +9,22 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace MyAlphaRobot
+namespace MyUtil
 {
     public static partial class UTIL
     {
         public class INPUT
         {
+            public static void PreviewCommand(ref TextCompositionEventArgs e)
+            {
+                e.Handled = new Regex("[^0-9A-Fa-f.]+").IsMatch(e.Text);
+            }
+
+            public static void PreviewIP(ref TextCompositionEventArgs e)
+            {
+                e.Handled = new Regex("[^0-9.]+").IsMatch(e.Text);
+            }
+
             public static void PreviewInteger(ref TextCompositionEventArgs e)
             {
                 e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);

@@ -23,7 +23,7 @@ namespace MyAlphaRobot.uc
     /// </summary>
     public partial class UcComboDisplay : UserControl
     {
-        private UTIL.DelegateUpdateInfo updateInfo;
+        private MyUtil.UTIL.DelegateUpdateInfo updateInfo;
 
         private data.ComboTable comboTable;
 
@@ -32,7 +32,7 @@ namespace MyAlphaRobot.uc
             InitializeComponent();
         }
 
-        public void InitObject(data.ComboTable comboTable, UTIL.DelegateUpdateInfo fxUpdateInfo)
+        public void InitObject(data.ComboTable comboTable, MyUtil.UTIL.DelegateUpdateInfo fxUpdateInfo)
         {
             updateInfo = fxUpdateInfo;
             this.comboTable = comboTable;

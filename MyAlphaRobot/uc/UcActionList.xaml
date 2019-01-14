@@ -65,11 +65,12 @@
                     <Button x:Name="btnStopAction" Content="停止播放" Margin="380,5,0,0" VerticalAlignment="Top" Click="btnStopAction_Click" HorizontalAlignment="Left" Width="75" Foreground="#FFF90404" FontWeight="Bold"/>
                 </Grid>
                 <Grid Grid.Column="1" Background="LightGoldenrodYellow" HorizontalAlignment="Stretch">
-                    <Label Content="修改动作:" HorizontalAlignment="Right" Margin="0,2,360,0" VerticalAlignment="Top"/>
-                    <Button x:Name="btnNewPoseEnd" Content="新增最后" Margin="0,5,280,0" VerticalAlignment="Top" Click="btnNewPose_Click" HorizontalAlignment="Right" Width="75"/>
-                    <Button x:Name="btnInsertPoseBefore" Content="新增在前" Margin="0,5,190,0" VerticalAlignment="Top" Click="btnInsertPoseBefore_Click" Width="75" HorizontalAlignment="Right"/>
-                    <Button x:Name="btnInsertPoseAfter" Content="新增在后" Margin="0,5,100,0" VerticalAlignment="Top" Click="btnInsertPoseAfter_Click" Width="75" HorizontalAlignment="Right"/>
-                    <Button x:Name="btnDeletePose" Content="删除" Margin="0,5,10,0" VerticalAlignment="Top" Click="btnDeletePose_Click" Width="75" HorizontalAlignment="Right"/>
+                    <Label Content="修改动作:" HorizontalAlignment="Right" Margin="0,2,410,0" VerticalAlignment="Top"/>
+                    <Button x:Name="btnNewPoseEnd" Content="新增最后" Margin="0,5,330,0" VerticalAlignment="Top" Click="btnNewPose_Click" HorizontalAlignment="Right" Width="75"/>
+                    <Button x:Name="btnInsertPoseBefore" Content="新增在前" Margin="0,5,250,0" VerticalAlignment="Top" Click="btnInsertPoseBefore_Click" Width="75" HorizontalAlignment="Right"/>
+                    <Button x:Name="btnInsertPoseAfter" Content="新增在后" Margin="0,5,170,0" VerticalAlignment="Top" Click="btnInsertPoseAfter_Click" Width="75" HorizontalAlignment="Right"/>
+                    <Button x:Name="btnDeletePose" Content="删除" Margin="0,5,90,0" VerticalAlignment="Top" Click="btnDeletePose_Click" Width="75" HorizontalAlignment="Right"/>
+                    <Button x:Name="btnCopyToEnd" Content="複製到最後" Margin="0,5,10,0" VerticalAlignment="Top" Click="btnCopyToEnd_Click" Width="75" HorizontalAlignment="Right"/>
                 </Grid>
             </WrapPanel>
         </Grid>
