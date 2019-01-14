@@ -21,5 +21,8 @@ This is the PC setup program for [RobotControl]
 | WindowsAPICodePack-Core  | v1.1.2 |
 | WindowsAPICodePack-Shell | v1.1.1 |
 
+### Google Blockly
+Download Google Blockly from [google/blockly], and update the file path in System Configuration or in robot events setup.
 
 [RobotControl]: https://github.com/Super169/RobotControl
+[google/blockly]: https://github.com/google/blockly
