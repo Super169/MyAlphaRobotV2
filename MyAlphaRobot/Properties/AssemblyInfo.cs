@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("MyAlphaRobot")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hospital Authority")]
+[assembly: AssemblyCompany("Super169 Group")]
 [assembly: AssemblyProduct("MyAlphaRobot")]
-[assembly: AssemblyCopyright("Copyright © Hospital Authority 2018")]
+[assembly: AssemblyCopyright("Copyright © Super169 Group 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
