@@ -16,7 +16,8 @@
                 <Grid Height="10" />
                 <Grid Height="30">
                     <Label Content="机械人设定:" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="cboRobotConfig" Margin="80,0,5,0" VerticalAlignment="Top" Height="22"/>
+                    <ComboBox x:Name="cboRobotConfig" Margin="80,0,40,0" VerticalAlignment="Top" Height="22"/>
+                    <Button x:Name="btnResetRobot" Content="重置" HorizontalAlignment="Right" Margin="0,0,5,0" VerticalAlignment="Top" Width="30" Click="btnResetRobot_Click"/>
                 </Grid>
                 <Grid Height="35">
                     <Button x:Name="btnBlockly" Content="Blockly目录" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="70" Click="btnBlockly_Click"/>
@@ -25,8 +26,25 @@
                 <Grid Height="30" Visibility="Collapsed">
                     <CheckBox x:Name="cbxAutoCheckVersion" Content="自动侦测上位机更新" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
                 </Grid>
-                <Grid Height="30">
+                <Grid Height="25">
                     <CheckBox x:Name="cbxAutoCheckFirmware" Content="自动侦测机械人固件更新" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                </Grid>
+                <Grid Height="25">
+                    <Label Content="选用舵机固件:" HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="center"/>
+                    <ComboBox x:Name="cboFirmware" Margin="120,0,5,0" VerticalAlignment="center" Height="22">
+                        <ComboBoxItem Content="正式发布版本"/>
+                        <ComboBoxItem Content="开发者测试版本"/>
+                        <ComboBoxItem Content="海灵舵机专用版本"/>
+                    </ComboBox>
+                </Grid>
+                <Grid Height="40">
+                    <Label Margin="25,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="注意: " FontWeight="Bold"  Foreground="#FF800000"/>
+                    <TextBlock Margin="65,5,10,0"  TextWrapping="Wrap" Text="预设选用舵机固件只用在检测固件更新, 用家可以自行选择需要烧录的固件." Foreground="#FF800000"/>
+                </Grid>
+                <Grid Height="30">
+                    <Label Content="等待启动时间:" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtWaitRebootSec" Height="20" Width="20" Margin="90,4,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" HorizontalAlignment="Left"  PreviewTextInput="tb_PreviewInteger" MaxLength="2" />
+                    <Label Content="秒" HorizontalAlignment="Left" Margin="110,0,0,0" VerticalAlignment="Top"/>
                 </Grid>
                 <Grid Height="30">
                     <CheckBox x:Name="cbxDisableBatteryUpdate" Content="停止电量更新" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
@@ -39,13 +57,11 @@
                     <Label Margin="5,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="注意: " FontWeight="Bold"  Foreground="#FF800000"/>
                     <TextBlock Margin="45,25,10,0"  TextWrapping="Wrap" Text="开发者模式下, 部份功能可能会破坏系统正常运作, 不建议一般用家开启使用." Foreground="#FF800000"/>
                 </Grid>
-
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
             <Button x:Name="btnConfirm" Content="确定" HorizontalAlignment="Right" Margin="0,5,100,0" VerticalAlignment="Top" Width="75" Click="btnConfirm_Click"/>
             <Button x:Name="btnCancel" Content="取消" HorizontalAlignment="Right" Margin="0,5,10,0" VerticalAlignment="Top" Width="75" Click="btnCancel_Click"/>
-
         </Grid>
 
     </Grid>

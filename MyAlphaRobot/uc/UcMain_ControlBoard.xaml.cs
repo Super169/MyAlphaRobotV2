@@ -63,6 +63,10 @@ namespace MyAlphaRobot.uc
             lblUdpTxPort.Visibility = vis;
             tbUdpTxPort.Visibility = vis;
 
+            gridSonicSettings.Visibility = gridVis;
+            gridMazeSettings.Visibility = gridVis;
+            gridMazeServo.Visibility = gridVis;
+            gridMazeTime.Visibility = gridVis;
         }
 
         private void SetDebug(bool mode)
@@ -112,6 +116,7 @@ namespace MyAlphaRobot.uc
             cbxMp3Enabled.IsChecked = UBT.config.mp3Enabled;
             tbMp3Volume.Text = UBT.config.mp3Volume.ToString();
             tbMp3Startup.Text = UBT.config.mp3Startup.ToString();
+            tbStartupAction.Text = UBT.config.startupAction.ToString();
 
             cbxEnableOLED.IsChecked = UBT.config.enableOLED;
 
@@ -128,6 +133,16 @@ namespace MyAlphaRobot.uc
             tbPsxNoEventMs.Text = UBT.config.psxNoEventMs.ToString();
             tbPsxIgnoreRepeatMs.Text = UBT.config.psxIgnoreRepeatMs.ToString();
             cbxPsxShock.IsChecked = UBT.config.psxShock;
+
+            cbxSonicEnabled.IsChecked = UBT.config.sonicEnabled;
+            tbSonicCheckFreq.Text = UBT.config.sonicCheckFreq.ToString();
+            tbSonicDelaySec.Text = UBT.config.sonicDelaySec.ToString();
+
+            tbMazeWallDistance.Text = UBT.config.mazeWallDistance.ToString();
+            tbMazeServo.Text = UBT.config.mazeServo.ToString();
+            cbxMazeServoDirection.IsChecked = UBT.config.mazeServoReverseDirection;
+            tbMazeServoMoveMs.Text = UBT.config.mazeServoMoveMs.ToString();
+            tbMazeServoWaitMs.Text = UBT.config.mazeServoWaitMs.ToString();
 
             cbxEnableRouter.IsChecked = UBT.networkConfig.enableRouter;
             tbSSID.Text = UBT.networkConfig.ssid;
@@ -207,9 +222,11 @@ namespace MyAlphaRobot.uc
             if (!ValidInteger(tbBatteryAlarmSec, 10, 255, "电量警报间距")) return;
             if (!ValidInteger(tbMaxServo, 1, 32, "舵机数目")) return;
             if (!ValidInteger(tbMp3Volume, 0, 30, "MP3音量")) return;
+            if (!ValidInteger(tbStartupAction, 0, 255, "啟動動作")) return;
+
             if (!ValidInteger(tbTouchDetectPeriod, 1000, 5000, "触摸连击感应时间")) return;
             if (!ValidInteger(tbTouchReleasePeriod, 1000, 5000, "触摸感应间距")) return;
-            if (!ValidInteger(tbMpuCheckFreq, 10, 100, "探测灵敏度")) return;
+            if (!ValidInteger(tbMpuCheckFreq, 10, 100, "MPU 探测灵敏度")) return;
             if (!ValidInteger(tbMpuPositionCheckFreq, 20, 100, "姿态灵敏度")) return;
 
             if (!ValidInteger(tbPsxCheckMs, 10, 255, "PS2 按键侦测间距")) return;
@@ -220,6 +237,15 @@ namespace MyAlphaRobot.uc
             if (!ValidInteger(tbServerPort, 0, 65535, "网路设定网页 连接埠")) return;
             if (!ValidInteger(tbUdpRxPort, 0, 65535, "群控 接收埠")) return;
             if (!ValidInteger(tbUdpTxPort, 0, 65535, "群控 发出埠")) return;
+
+            if (!ValidInteger(tbSonicCheckFreq, 1, 10, "超声波 探测灵敏度")) return;
+            if (!ValidInteger(tbSonicDelaySec, 0, 255, "超声波 触发後间距")) return;
+
+            if (!ValidInteger(tbMazeServo, 0, CONST.MAX_SERVO, "迷宮使用的舵機")) return;
+            if (!ValidInteger(tbMazeWallDistance, 10, 255, "迷宮中不能前進的阻擋牆距離")) return;
+
+            if (!ValidInteger(tbMazeServoMoveMs, 100, 5000, "舵機改動方向轉動指令時間")) return;
+            if (!ValidInteger(tbMazeServoWaitMs, 100, 5000, "等待舵機改動方向時間")) return;
 
             try
             {
@@ -237,6 +263,7 @@ namespace MyAlphaRobot.uc
                 UBT.config.mp3Enabled = (cbxMp3Enabled.IsChecked == true);
                 UBT.config.mp3Volume = byte.Parse(tbMp3Volume.Text);
                 UBT.config.mp3Startup = byte.Parse(tbMp3Startup.Text);
+                UBT.config.startupAction = byte.Parse(tbStartupAction.Text);
    
                 UBT.config.enableOLED = (cbxEnableOLED.IsChecked == true);
 
@@ -253,6 +280,16 @@ namespace MyAlphaRobot.uc
                 UBT.config.psxNoEventMs = byte.Parse(tbPsxNoEventMs.Text);
                 UBT.config.psxIgnoreRepeatMs = (UInt16)int.Parse(tbPsxIgnoreRepeatMs.Text);
                 UBT.config.psxShock = (cbxPsxShock.IsChecked == true);
+
+                UBT.config.sonicEnabled = (cbxSonicEnabled.IsChecked == true);
+                UBT.config.sonicCheckFreq = byte.Parse(tbSonicCheckFreq.Text);
+                UBT.config.sonicDelaySec = byte.Parse(tbSonicDelaySec.Text);
+
+                UBT.config.mazeServo = byte.Parse(tbMazeServo.Text);
+                UBT.config.mazeWallDistance = byte.Parse(tbMazeWallDistance.Text);
+                UBT.config.mazeServoReverseDirection = (cbxMazeServoDirection.IsChecked == true);
+                UBT.config.mazeServoMoveMs = (UInt16)int.Parse(tbMazeServoMoveMs.Text);
+                UBT.config.mazeServoWaitMs = (UInt16)int.Parse(tbMazeServoWaitMs.Text);
 
                 UBT.networkConfig.enableRouter = (cbxEnableRouter.IsChecked == true);
                 UBT.networkConfig.ssid = tbSSID.Text;

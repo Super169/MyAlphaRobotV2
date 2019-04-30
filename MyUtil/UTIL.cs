@@ -171,5 +171,81 @@ namespace MyUtil
             return output.Replace("-", separator);
         }
 
+        public static byte[] Str2B7Array(string sData)
+        {
+            List<byte> bytes = new List<byte>();
+            char[] chars = sData.ToCharArray();
+            int idx = 0;
+            bool valid = true;
+            while (valid && (idx < chars.Length))
+            {
+                char c = chars[idx];
+                int iCode = (int)c;
+                if (iCode < 128)
+                {
+                    // Chechk for "\r" & "\n"
+                    if (c == '\\')
+                    {
+                        if (idx < chars.Length - 1)
+                        {
+                            char c2 = chars[idx + 1];
+                            if ((c2 == 'R') || (c2 == 'r'))
+                            {
+                                iCode = 0x0D;
+                                idx++;
+                            }
+                            else if ((c2 == 'N') || (c2 == 'n'))
+                            {
+                                iCode = 0x0A;
+                                idx++;
+                            }
+                        }
+                    }
+                    bytes.Add((byte)iCode);
+                }
+                else
+                {
+                    valid = false;
+                }
+                idx++;
+            }
+            if (!valid) return null;
+            return bytes.ToArray();
+        }
+
+        public static string B7Array2Str(byte[] data)
+        {
+            return B7Array2Str(data, 0, data.Length);
+        }
+
+        public static string B7Array2Str(byte[] data, int startPos, int count)
+        {
+            if (startPos >= data.Length) return "";
+            int endPos = data.Length;
+            if (startPos + count < data.Length)
+            {
+                endPos = startPos + count;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (int i = startPos; i < endPos; i++)
+            {
+                if (data[i] > 128) return null;
+                if (data[i] == 0x00) break;
+                if (data[i] == 0x0A)
+                {
+                    sb.Append("\\n");
+                }
+                else if (data[i] == 0x0D)
+                {
+                    sb.Append("\\r");
+                }
+                else
+                {
+                    sb.Append((char)data[i]);
+                }
+            }
+            return sb.ToString();
+        }
+
     }
 }

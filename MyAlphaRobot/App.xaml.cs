@@ -71,9 +71,10 @@ namespace MyAlphaRobot
                 SYSTEM.sc = new SystemConfig()
                 {
                     robotConfigFile = CONST.DEFAULT_CONFIG.ROBOT_CONFIG_FILE,
-                    blocklyPath = CONST.DEFAULT_CONFIG.BLOCKLY_PATH,
+                    blocklyPath = MyUtil.FILE.AppFilePath(CONST.DEFAULT_CONFIG.BLOCKLY_PATH),
                     autoCheckVersion = CONST.DEFAULT_CONFIG.AUTO_CHECK_VERSION,
                     autoCheckFirmware = CONST.DEFAULT_CONFIG.AUTO_CHECK_FIRMWARE,
+                    waitRebootSec = CONST.DEFAULT_CONFIG.WAIT_REBOOT_SEC,
                     disableBatteryUpdate = CONST.DEFAULT_CONFIG.DISABLE_BATTERY_UPDATE,
                     disableMpuUpdate = CONST.DEFAULT_CONFIG.DISABLE_MPU_UPDATE,
                     developerMode = CONST.DEFAULT_CONFIG.DEVEOPER_MODE
@@ -82,18 +83,29 @@ namespace MyAlphaRobot
             else
             {
                 if (SYSTEM.sc.robotConfigFile == null) SYSTEM.sc.robotConfigFile = CONST.DEFAULT_CONFIG.ROBOT_CONFIG_FILE;
-                if (SYSTEM.sc.blocklyPath == null) SYSTEM.sc.blocklyPath = CONST.DEFAULT_CONFIG.BLOCKLY_PATH;
+                if (String.IsNullOrWhiteSpace(SYSTEM.sc.blocklyPath)) SYSTEM.sc.blocklyPath = MyUtil.FILE.AppFilePath(CONST.DEFAULT_CONFIG.BLOCKLY_PATH);
+            }
+
+            // fill default for invalid value, to handle for reading from old config files
+            if ((SYSTEM.sc.waitRebootSec == 0) || (SYSTEM.sc.waitRebootSec > 99))
+            {
+                SYSTEM.sc.waitRebootSec = CONST.DEFAULT_CONFIG.WAIT_REBOOT_SEC;
+            }
+
+            // Check blockly path
+
+            if (!Util.IsBlocklyPath(SYSTEM.sc.blocklyPath))
+            {
+                if (!Util.IsBlocklyPath(MyUtil.FILE.AppFilePath(CONST.DEFAULT_CONFIG.BLOCKLY_PATH)))
+                {
+                    SYSTEM.sc.blocklyPath = MyUtil.FILE.AppFilePath(CONST.DEFAULT_CONFIG.BLOCKLY_PATH);
+                }
+                    
             }
 
             #region "Version Config"
 
-            SYSTEM.versionChecked = false;
-            if (SYSTEM.sc.autoCheckVersion)
-            {
-
-            }
-
-            if (SYSTEM.sc.autoCheckFirmware)
+                if (SYSTEM.sc.autoCheckFirmware)
             {
                 Util.CheckFirmware();
             }

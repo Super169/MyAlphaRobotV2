@@ -118,12 +118,25 @@ namespace MyAlphaRobot
         public ImageBrush loadImage(ConfigObject co)
         {
             if (co.imagePath == "") return null;
+            /*
             ImageBrush image = new ImageBrush
             {
                 ImageSource = (co.appResource ? new BitmapImage(new Uri(co.imagePath)) : new BitmapImage(new Uri(co.imagePath, UriKind.Relative))),
                 Stretch = Stretch.Uniform
             };
             return image;
+            */
+            if (co.appResource)
+            {
+                ImageBrush image = new ImageBrush
+                {
+                    ImageSource = new BitmapImage(new Uri(co.imagePath)),
+                    Stretch = Stretch.Uniform
+                };
+                return image;
+
+            }
+            return co.getImageBrush();
         }
 
     }

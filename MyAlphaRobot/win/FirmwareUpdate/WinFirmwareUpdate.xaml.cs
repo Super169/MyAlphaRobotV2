@@ -126,7 +126,7 @@ namespace MyAlphaRobot
             this.Closing += OnWindowClosing;
             InitializeSerial();
             FindSerial((string)MyUtil.UTIL.ReadRegistry(MyUtil.UTIL.KEY.LAST_CONNECTION_SERIAL));
-            cboVersion.SelectedIndex = (RCVersion.IsBeta() ? 1 : 0);
+            cboVersion.SelectedIndex = (int) SYSTEM.sc.firmwareType;
             SetFwInfo();
             SetStatus();
         }
@@ -159,15 +159,25 @@ namespace MyAlphaRobot
             fwVersion = "";
             if (SYSTEM.firmwareChecked)
             {
-                if (cboVersion.SelectedIndex == 0)
+                switch (cboVersion.SelectedIndex)
                 {
-                    fwVersion = SYSTEM.firmwareRelease;
-                    urlFirmware = CONST.DISTRIBUTION.FIRMWARE.RELEASE.PATH;
-                }
-                else
-                {
-                    fwVersion = SYSTEM.firmwareBeta;
-                    urlFirmware = CONST.DISTRIBUTION.FIRMWARE.BETA.PATH;
+                    case 0:
+                        fwVersion = SYSTEM.firmwareRelease;
+                        urlFirmware = CONST.DISTRIBUTION.FIRMWARE.RELEASE.PATH;
+                        break;
+                    case 1:
+                        fwVersion = SYSTEM.firmwareBeta;
+                        urlFirmware = CONST.DISTRIBUTION.FIRMWARE.BETA.PATH;
+                        break;
+                    case 2:
+                        fwVersion = SYSTEM.firmwareHailzd;
+                        urlFirmware = CONST.DISTRIBUTION.FIRMWARE.HAILZD.PATH;
+                        break;
+                    // should not happen, but for safety add dummy default
+                    default:
+                        fwVersion = SYSTEM.firmwareRelease;
+                        urlFirmware = CONST.DISTRIBUTION.FIRMWARE.RELEASE.PATH;
+                        break;
                 }
             }
             fwFileName = string.Format("firmware.{0}.bin", fwVersion);

@@ -52,15 +52,21 @@ namespace MyUtil
             return success;
         }
 
-        public static bool SaveDataFile(object data, string fileName, bool zip = true)
+        public static bool SaveDataFile(object data, string fileName, bool zip = true, string logFile = null)
         {
             string js;
             try
             {
-                js = new JavaScriptSerializer().Serialize(data);
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = 1000000000;  // Save max length to 1GB
+                js = jss.Serialize(data);
             }
-            catch
+            catch (Exception ex)
             {
+                if (!String.IsNullOrEmpty(logFile))
+                {
+                    AppendToFile(String.Format("{0} - SaveDataFile({1}) Exception:\n{2}\n",DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"),fileName , ex.ToString()), logFile);
+                }
                 return false;
             }
             return SaveDataFile(js, fileName, zip);
@@ -81,18 +87,24 @@ namespace MyUtil
             return RestoreTextFile(out js, fileName);
         }
 
-        public static T RestoreDataFile<T>(string fileName, bool zip = true)
+        public static T RestoreDataFile<T>(string fileName, bool zip = true, string logFile = null)
         {
             T data;
             string js;
             if (!RestoreDataFile(out js, fileName, zip)) return default(T);
             try
             {
-                data = new JavaScriptSerializer().Deserialize<T>(js);
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = 1000000000;  // Save max length to 1GB
+                data = jss.Deserialize<T>(js);
 
             }
-            catch
+            catch (Exception ex)
             {
+                if (!String.IsNullOrEmpty(logFile))
+                {
+                    AppendToFile(String.Format("{0} - RestoreDataFile({1}) Exception:\n{2}\n", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"), fileName, ex.ToString()), logFile);
+                }
                 return default(T);
             }
             return data;

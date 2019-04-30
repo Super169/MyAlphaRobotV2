@@ -34,9 +34,11 @@ namespace MyAlphaRobot.data
             public const byte MAX_COMMAND_WAIT_MS = 23;
             public const byte MAX_COMMAND_RETRY = 24;
 
+
             public const byte MP3_ENABLED = 31;
             public const byte MP3_VOLUME = 32;
             public const byte MP3_STARTUP = 33;
+            public const byte STARTUP_ACTION = 34;
 
             public const byte PSX_ENABLED = 35;
             public const byte PSX_CHECK_MS = 36;
@@ -51,6 +53,17 @@ namespace MyAlphaRobot.data
             public const byte TOUCH_ENABLED = 47;
             public const byte TOUCH_DETECT_PERIOD = 48;
             public const byte TOUCH_RELEASE_PERIOD = 50;
+
+            public const byte SONIC_ENABLED = 53;
+            public const byte SONIC_CHECK_FREQ = 54;
+            public const byte SONIC_DELAY_SEC = 55;
+
+            public const byte MAZE_SERVO = 56;
+            public const byte MAZE_WALL_DISTANCE = 57;
+
+            public const byte MAZE_SERVO_DIRECTION = 25;
+            public const byte MAZE_SERVO_MOVE_MS = 26;
+            public const byte MAZE_SERVO_WAIT_MS = 28;
 
         };
 
@@ -144,6 +157,30 @@ namespace MyAlphaRobot.data
         }
 
         #endregion
+
+
+        #region "Sonic Sensor"
+
+        public bool sonicEnabled
+        {
+            get { return (this.data[OFFSET.SONIC_ENABLED] == 1); }
+            set { this.data[OFFSET.SONIC_ENABLED] = (byte)(value ? 1 : 0); }
+        }
+
+        public byte sonicCheckFreq
+        {
+            get { return this.data[OFFSET.SONIC_CHECK_FREQ];  }
+            set { this.data[OFFSET.SONIC_CHECK_FREQ] = value;  }
+        }
+
+        public byte sonicDelaySec
+        {
+            get { return this.data[OFFSET.SONIC_DELAY_SEC]; }
+            set { this.data[OFFSET.SONIC_DELAY_SEC] = value; }
+        }
+
+        #endregion
+
         public byte maxServo
         {
             get { return data[OFFSET.MAX_SERVO]; }
@@ -185,6 +222,12 @@ namespace MyAlphaRobot.data
         {
             get { return data[OFFSET.MP3_STARTUP]; }
             set { data[OFFSET.MP3_STARTUP] = value; }
+        }
+
+        public byte startupAction
+        {
+            get { return data[OFFSET.STARTUP_ACTION]; }
+            set { data[OFFSET.STARTUP_ACTION] = value; }
         }
 
         public bool mpuEnabled
@@ -233,6 +276,36 @@ namespace MyAlphaRobot.data
         {
             get { return (this.data[OFFSET.PSX_SHOCK] == 1); }
             set { this.data[OFFSET.PSX_SHOCK] = (byte)(value ? 1 : 0); }
+        }
+
+        public byte mazeServo
+        {
+            get { return data[OFFSET.MAZE_SERVO]; }
+            set { this.data[OFFSET.MAZE_SERVO] = value; }
+        }
+
+        public byte mazeWallDistance
+        {
+            get { return data[OFFSET.MAZE_WALL_DISTANCE]; }
+            set { data[OFFSET.MAZE_WALL_DISTANCE] = value; }
+        }
+
+        public bool mazeServoReverseDirection
+        {
+            get { return (data[OFFSET.MAZE_SERVO_DIRECTION] != 0); }
+            set { data[OFFSET.MAZE_SERVO_DIRECTION] = (byte) (value ? 1 : 0); }
+        }
+
+        public UInt16 mazeServoMoveMs
+        {
+            get { return getUInt16(OFFSET.MAZE_SERVO_MOVE_MS); }
+            set { setUInt16(OFFSET.MAZE_SERVO_MOVE_MS, value); }
+        }
+
+        public UInt16 mazeServoWaitMs
+        {
+            get { return getUInt16(OFFSET.MAZE_SERVO_WAIT_MS); }
+            set { setUInt16(OFFSET.MAZE_SERVO_WAIT_MS, value); }
         }
 
 

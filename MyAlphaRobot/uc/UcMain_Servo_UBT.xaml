@@ -35,7 +35,7 @@
         <Grid Grid.Row="2" Background="OrangeRed">
             <Grid Margin="0,8,0,0">
                 <Label Content="当前位置为: " HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" />
-                <TextBox Name="txtFixAngle" HorizontalAlignment="Left" Height="23" Margin="83,2,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="26" PreviewTextInput="tb_PreviewInteger" PreviewKeyDown="tb_PreviewKeyDown_nospace" CharacterCasing="Upper" MaxLength="3"/>
+                <TextBox Name="txtFixAngle" HorizontalAlignment="Left" Height="23" Margin="82,2,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30" PreviewTextInput="tb_PreviewInteger" PreviewKeyDown="tb_PreviewKeyDown_nospace" CharacterCasing="Upper" MaxLength="3"/>
                 <Label Content="度, 微调量:" HorizontalAlignment="Left" Margin="109,0,0,0" VerticalAlignment="Top" />
                 <ComboBox x:Name="cboDelta" HorizontalAlignment="Left" Margin="176,2,0,0" VerticalAlignment="Top" Width="40" Height="23">
                     <ComboBoxItem IsSelected="True">0</ComboBoxItem>

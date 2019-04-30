@@ -1,0 +1,20 @@
+1) Open https://blockly-demo.appspot.com/static/demos/blockfactory/index.html
+   Load _www\toolbox.xml
+   Add blocks
+   Save toolbox.xml
+   Update _www\custom_block.js with new blocks in JavaScript
+
+2) Go to Workspace Factory
+   Import Custom Blocks (_www\custom_block.js)
+   Load to Edit - Toolbox (_www\toolbox.xml)
+   Add the block to related group
+   Export - Toolbox (_www\toolbox.xml)
+
+3) EventHandler\BLOCKLY.cs
+   Add related definition
+
+4) EventHandler\RobotHandler_Condition.cs (if add condition)
+   (1) public enum TYPE
+   (2) Add clsss BLOCKLY.COND.XXXX
+   (3) public Condition FromXmlNode 
+   (4) public static Condition FromBytes

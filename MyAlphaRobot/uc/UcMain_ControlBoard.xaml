@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="250" />
+            <RowDefinition Height="280" />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
@@ -68,6 +68,11 @@
                                 <TextBox x:Name="tbMp3Startup" Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
                             </Grid>
                             <Grid Height="25">
+                                <Label Content="啟動時自动播放動作:" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbStartupAction" Text="" Margin="130,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" PreviewTextInput="tb_PreviewInteger" MaxLength="3"/>
+                                <Label Content="(只可播放 1 - 255 )" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </Grid>
+                            <Grid Height="25">
                                 <CheckBox x:Name="cbxEnableOLED" Content="使用OLED显示屏" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"  />
                             </Grid>
                         </StackPanel>
@@ -79,15 +84,6 @@
                             <Grid Height="25">
                                 <CheckBox x:Name="cbxMpuEnabled" Content="启动 MPU6050 陀螺仪" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                             </Grid>
-                            <!--
-                            <Grid Height="25">
-                                <CheckBox x:Name="cbxMpuEnabled" Content="倒地後自动站立:" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                <Label Content="面向上:" Margin="120,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                <TextBox x:Name="tbAutoFaceUp" Text="" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
-                                <Label Content="面向下:" Margin="205,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                                <TextBox x:Name="tbAutoFaceDown" Text="" Margin="255,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
-                            </Grid>
-                            -->
                             <Grid x:Name="gridMpuSensitivity" Height="25">
                                 <Label Content="探测灵敏度:" Margin="25,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                                 <TextBox x:Name="tbMpuCheckFreq" Text="" Margin="95,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger" IsReadOnly="True"/>
@@ -103,6 +99,18 @@
                                 <Label x:Name="lblTouchReleasePeriod" Content="感应间距:" Margin="190,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                                 <TextBox x:Name="tbTouchReleasePeriod" Text="" Margin="250,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
                             </Grid>
+                            <Grid Height="0">
+                            </Grid>
+                            <Grid Height="25">
+                                <Button x:Name="btnEventHandler" Width="100"  Click="btnEventHandler_Click">事件处理系统</Button>
+                            </Grid>
+
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="擴展功能">
+                    <Grid>
+                        <StackPanel>
                             <Grid Height="25">
                                 <CheckBox x:Name="cbxPsxEnabled" Content="启动 PS2 手柄输入" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                                 <Label x:Name="lblPsxCheckMs" Content="侦测按键间距:" Margin="166,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -119,9 +127,33 @@
                                 <CheckBox x:Name="cbxPsxShock" Content="发出有效指令後震动手柄" Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                             </Grid>
                             <Grid Height="25">
+                                <CheckBox x:Name="cbxSonicEnabled" Content="启动 超声波 测距" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                             </Grid>
-                            <Grid Height="25">
-                                <Button x:Name="btnEventHandler" Width="100"  Click="btnEventHandler_Click">事件处理系统</Button>
+                            <Grid x:Name="gridSonicSettings" Height="25">
+                                <Label Content="探测灵敏度:" Margin="25,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbSonicCheckFreq" Text="" Margin="95,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
+                                <Label Content="Hz" Margin="130,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label Content="触发後间距:" Margin="160,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbSonicDelaySec" Text="" Margin="230,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
+                                <Label Content="秒" Margin="260,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </Grid>
+                            <Grid x:Name="gridMazeSettings" Height="25">
+                                <Label Content="前方空間少於" Margin="25,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMazeWallDistance" Text="" Margin="110,4,0,3" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
+                                <Label Content="cm, 會視在被擋." Margin="140,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </Grid>
+                            <Grid x:Name="gridMazeServo" Height="25">
+                                <Label Content="使用舵機:" Margin="25,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMazeServo" Text="" Margin="95,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger"/>
+                                <CheckBox x:Name="cbxMazeServoDirection" Content="反方向轉動 (0度為右)" Margin="150,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </Grid>
+                            <Grid x:Name="gridMazeTime" Height="25">
+                                <Label Content="轉動時間:" Margin="25,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMazeServoMoveMs" Text="" Margin="95,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
+                                <Label Content="ms" Margin="130,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <Label Content="等待時間:" Margin="170,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <TextBox x:Name="tbMazeServoWaitMs" Text="" Margin="230,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="35" MaxLength="4" PreviewTextInput="tb_PreviewInteger"/>
+                                <Label Content="ms" Margin="260,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                             </Grid>
 
                         </StackPanel>

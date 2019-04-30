@@ -43,7 +43,8 @@
 
                                     <ComboBox x:Name="cboVersion" Width="80" Height="25" IsEditable="False"  HorizontalAlignment="Right" Margin="0,3,320, 0" SelectionChanged="cboVersion_SelectionChanged">
                                         <ComboBoxItem IsSelected="True" Content="发布版本"/>
-                                        <ComboBoxItem Content="测试版"/>
+                                        <ComboBoxItem Content="测试版本"/>
+                                        <ComboBoxItem Content="海灵舵机"/>
                                     </ComboBox>
 
                                     <Label Content="最新版本: " Margin="0,3,260,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>

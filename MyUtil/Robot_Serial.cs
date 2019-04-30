@@ -86,7 +86,13 @@ namespace MyUtil
                 {
                     serialPort.DiscardInBuffer();
                     serialPort.DiscardOutBuffer();
-                    UpdateInfo(string.Format("Port {0} connected - 115200, N, 8, 1", serialPort.PortName));
+                    UpdateInfo(string.Format("Port {0} connected - {1}, {2}, {3}, {4}", 
+                                             serialPort.PortName,
+                                             serialPort.BaudRate,
+                                             serialPort.Parity,
+                                             serialPort.DataBits,
+                                             serialPort.StopBits
+                                             ));
                     UTIL.WriteRegistry(UTIL.KEY.LAST_CONNECTION_SERIAL, parm.portName);
                     flag = true;
                 }

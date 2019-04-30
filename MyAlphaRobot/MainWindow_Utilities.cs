@@ -51,7 +51,7 @@ namespace MyAlphaRobot
                 cbxActiveLocked.IsChecked = servo[activeServo].locked;
                 cbxActiveSelected.IsChecked = servo[activeServo].isSelected;
                 sliderActiveAngle.Value = servo[activeServo].angle;
-                lblAngle.Content = servo[activeServo].angle;
+                tbAngle.Text = servo[activeServo].angle.ToString();
                 rbLedNoChange.IsChecked = (servo[activeServo].led == CONST.LED.NO_CHANGE);
                 rbLedTurnOn.IsChecked = (servo[activeServo].led == CONST.LED.TURN_ON);
                 rbLedTurnOff.IsChecked = (servo[activeServo].led == CONST.LED.TURN_OFF);
@@ -63,7 +63,7 @@ namespace MyAlphaRobot
                 cbxActiveLocked.IsChecked = false;
                 cbxActiveSelected.IsChecked = false;
                 sliderActiveAngle.Value = 0;
-                lblAngle.Content = "";
+                tbAngle.Text = "";
                 // ucMainServo.txtAdjPreview.Text = "";
                 // ucMainServo.txtFixAngle.Text = "";
             }
@@ -161,6 +161,10 @@ namespace MyAlphaRobot
                 }
             }
             servo[id].Show();
+            if (id == activeServo)
+            {
+                sliderActiveAngle.Value = servo[id].angle;
+            }
         }
 
 

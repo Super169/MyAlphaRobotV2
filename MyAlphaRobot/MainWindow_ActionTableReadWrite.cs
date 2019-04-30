@@ -97,6 +97,121 @@ namespace MyAlphaRobot
 
         }
 
+        private void LoadActionCsvFile()
+        {
+            int actionId = GetSelectedActionId();
+            if (actionId < 0) return;
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = CONST.ROBOT_CSV_FILTER;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                String fileName = openFileDialog.FileName;
+                char actionCode = UBT.actionTable.action[actionId].actionCode;
+                if (MessageConfirm(String.Format("把 CSV 檔 {0} 的動作檔截入動作 {1} 中, 當前資料將會被覆蓋", fileName, actionCode)))
+                {
+                    try
+                    {
+                        string[] csv = System.IO.File.ReadAllLines(fileName);
+                        if (csv.Length < 3)
+                        {
+                            UpdateInfo(String.Format("Invalid file size: {0} has {1} lines.", fileName, csv.Length), MyUtil.UTIL.InfoType.error);
+                            return;
+                        }
+                        data.ActionInfo ai = UBT.actionTable.action[actionId];
+                        if (ai.ReadFromCsv(csv))
+                        {
+                            UpdateInfo(String.Format("Rebuild action table from {0}", fileName));
+                        }
+                        else
+                        {
+                            UpdateInfo(String.Format("Error building table from {0}", fileName), MyUtil.UTIL.InfoType.error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        UpdateInfo(String.Format("Error reading data from {0}: {1}", fileName, ex.Message), MyUtil.UTIL.InfoType.error);
+                    }
+                    RefreshActionInfo();
+                }
+            }
+        }
+
+        private void SaveActionCsvFile()
+        {
+            int actionId = GetSelectedActionId();
+            if (actionId < 0) return;
+            UpdateInfo();
+            data.ActionInfo ai = UBT.actionTable.action[actionId];
+            if (ai.actionFileExists && (!ai.poseLoaded))
+            {
+                MessageBox.Show("动作资料尚未下载到电脑, 请先 [下载动作]", "无法储存", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                return;
+            }
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = CONST.ROBOT_CSV_FILTER;
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                String fileName = saveFileDialog.FileName;
+                try
+                {
+                    TextWriter tw = new StreamWriter(fileName, false);
+                    tw.Write(ai.GetCsv());
+                    tw.Write(data.PoseInfo.GetCsvHeader());
+                    for (UInt16 poseId = 0; poseId < ai.poseCnt; poseId++)
+                    {
+                        tw.Write(ai.GetPoseCsv(poseId));
+                    }
+                    tw.Close();
+                    UpdateInfo(String.Format("Action CSV file saved to {0}", fileName));
+                }
+                catch (Exception ex)
+                {
+                    UpdateInfo(String.Format("Error saving to {0}: {1}", fileName, ex.Message), MyUtil.UTIL.InfoType.error);
+                }
+            }
+
+        }
+
+        private void G2Conv()
+        {
+            int actionId = GetSelectedActionId();
+            if (actionId < 0) return;
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = CONST.ROBOT_CSV_FILTER;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                String fileName = openFileDialog.FileName;
+                char actionCode = UBT.actionTable.action[actionId].actionCode;
+                if (MessageConfirm(String.Format("把動作 {0} 根據 {1} 的設定, 由 Alpha 1 轉成 Alpha 2 的角度, 當前資料將會被覆蓋", actionCode, fileName)))
+                {
+                    try
+                    {
+                        string[] csv = System.IO.File.ReadAllLines(fileName);
+                        if (csv.Length < 6)
+                        {
+                            UpdateInfo(String.Format("Invalid file size: {0} has {1} lines.", fileName, csv.Length), MyUtil.UTIL.InfoType.error);
+                            return;
+                        }
+                        
+                        data.ActionInfo ai = UBT.actionTable.action[actionId];
+                        if (ai.G2Conv(csv))
+                        {
+                            UpdateInfo(String.Format("Rebuild action table from {0}", fileName));
+                        }
+                        else
+                        {
+                            UpdateInfo(String.Format("Error building table from {0}", fileName), MyUtil.UTIL.InfoType.error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        UpdateInfo(String.Format("Error reading data from {0}: {1}", fileName, ex.Message), MyUtil.UTIL.InfoType.error);
+                    }
+                    RefreshActionInfo();
+                }
+            }
+        }
+
         private void DownloadActionTable()
         {
             if (MessageConfirm("從機械人重新下載所有動作, 當前資料將會被覆蓋"))

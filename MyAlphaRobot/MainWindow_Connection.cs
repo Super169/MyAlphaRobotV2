@@ -64,7 +64,8 @@ namespace MyAlphaRobot
             imgConfigRobot.IsEnabled = !connected;
         }
 
-        private void UpdateEventHandlerStatus() {
+        private void UpdateEventHandlerStatus()
+        {
             if (!robot.isConnected)
             {
                 lblEventHandlerStatus.Visibility = Visibility.Hidden;
@@ -113,6 +114,15 @@ namespace MyAlphaRobot
                 {
                     case CONN_MODE.Serial:
                         success = robot.Connect((string)portsComboBox.SelectedValue);
+                        Thread.Sleep(100); // Wait 0.1s to check if anything returned
+                        if (robot.Available == 0)
+                        {
+                            break;
+                        }
+                        // Data returned immediately, possible reboot
+                        UpdateInfo("Wait for reboot");
+                        Thread.Sleep(SYSTEM.sc.waitRebootSec * 1000);
+                        robot.ClearRxBuffer();
                         break;
                     case CONN_MODE.Network:
                         int port;
@@ -172,41 +182,57 @@ namespace MyAlphaRobot
                     lblIP.Content = "";
                 }
 
-                if (SYSTEM.sc.autoCheckFirmware)
+                string msg = null;
+                string currVersion = RCVersion.ToCode();
+                if (RCVersion.IsOutdated())
                 {
-                    string msg = null;
+                    msg = "你的固件并未达到上位机的要求, 部份功能可能会出错, 必须尽快更新";
+                    msg += string.Format("\n\n你的固件版本:　 {0}\n上位機最低要求: {1}", currVersion, RCVersion.TargetVersion.GetCode());
+                }
+                else if (SYSTEM.sc.autoCheckFirmware)
+                {
                     if (string.IsNullOrWhiteSpace(UBT.robotInfo.version))
                     {
                         msg = "";
                     }
                     else
                     {
-                        string currVersion = RCVersion.ToCode();
-                        string latestVersion = (Util.IsBeta(currVersion) ? SYSTEM.firmwareBeta : SYSTEM.firmwareRelease);
-                        if (RCVersion.IsOutdated())
+                        string latestVersion = Util.LatestVersion();
+                        if (currVersion != latestVersion)
                         {
-                            msg = "固件版本太旧了, 必须尽快更新";
-                        }
-                        else if (currVersion != latestVersion)
-                        {
-                            msg = "己发布了新的固件";
-                        }
-                        if (!string.IsNullOrWhiteSpace(msg))
-                        {
-                            msg += string.Format("\n\n你的固件版本: {0}\n最新固件版本: {1}", currVersion, SYSTEM.firmwareBeta);
+                            switch (SYSTEM.sc.firmwareType)
+                            {
+                                case SystemConfig.FIRMWARE.beta:
+                                    msg = "开发者测试版";
+                                    break;
+                                case SystemConfig.FIRMWARE.hailzd:
+                                    msg = "海灵专用版";
+                                    break;
+                                default:
+                                    msg = "正式发布版";
+                                    break;
+                            }
+                            msg += "固件己发布了新版本";
+                            msg += string.Format("\n\n你的固件版本: {0}\n最新固件版本: {1}", currVersion, latestVersion);
                         }
                     }
-                    if (!string.IsNullOrWhiteSpace(msg))
-                    {
-                        msg += "\n\n请用 [机械人固件烧录] 功能, 更新你的固件";
-                        MessageBox.Show(msg, "固件更新", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-
-                    }
+                }
+                if (!string.IsNullOrWhiteSpace(msg))
+                {
+                    msg += "\n\n请用 [机械人固件烧录] 功能, 更新你的固件";
+                    MessageBox.Show(msg, "固件更新", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 }
 
                 if (UBT.config.version < data.BoardConfig.MIN_VERSION)
                 {
-                    MessageBox.Show("侦测不到所需的固件, 部份功能可能会失效.\n请尝试重新连线, 或更新固件档.", "读取设定档失败或设定档已过时", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    MessageBox.Show(String.Format("侦测不到所需的固件 {0}, 部份功能可能会失效.\n请尝试重新连线, 或更新固件档.", RCVersion.TargetVersion.GetCode()), 
+                                    "读取设定档失败或设定档已过时", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                }
+
+                if (SYSTEM.configObject.max_servo != UBT.config.maxServo)
+                {
+                    MessageBox.Show(string.Format("上位机跟主控板的舵机数目设定不同\n上位机: {0} 舵机, 主控板: {1} 舵机\n请确定所选的机械人模型跟主控板是一致的\n或修改有关设定\n\n完成後, 请重新启动程式再连接.\n", SYSTEM.configObject.max_servo, UBT.config.maxServo),
+                                    "舵机数目不配合", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 }
 
                 if (!SYSTEM.sc.disableBatteryUpdate) UpdateBattery();

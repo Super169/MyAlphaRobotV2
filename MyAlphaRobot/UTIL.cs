@@ -85,30 +85,37 @@ namespace MyAlphaRobot
 
         public static void CheckFirmware()
         {
-            SYSTEM.firmwareBeta = MyUtil.WEB.GetTextFile(CONST.DISTRIBUTION.FIRMWARE.BETA.VERSION);
             SYSTEM.firmwareRelease = MyUtil.WEB.GetTextFile(CONST.DISTRIBUTION.FIRMWARE.RELEASE.VERSION);
+            SYSTEM.firmwareBeta = MyUtil.WEB.GetTextFile(CONST.DISTRIBUTION.FIRMWARE.BETA.VERSION);
+            SYSTEM.firmwareHailzd = MyUtil.WEB.GetTextFile(CONST.DISTRIBUTION.FIRMWARE.HAILZD.VERSION);
             // mark as checked if any of them is available
-            SYSTEM.firmwareChecked = !(string.IsNullOrWhiteSpace(SYSTEM.firmwareBeta) && string.IsNullOrWhiteSpace(SYSTEM.firmwareRelease));
-
+            SYSTEM.firmwareChecked = !(string.IsNullOrWhiteSpace(SYSTEM.firmwareBeta) || 
+                                       string.IsNullOrWhiteSpace(SYSTEM.firmwareRelease) ||
+                                       string.IsNullOrWhiteSpace(SYSTEM.firmwareHailzd));
         }
 
-        public static bool IsBeta(string version)
+        public static string LatestVersion()
         {
-            string[] v = version.Split('.');
-            if (v.Length != 4) return false;  // Invalid version number
-            return v[2] == "99";
+            if (!SYSTEM.firmwareChecked) CheckFirmware();
+            string version = SYSTEM.firmwareRelease; // use release version by default
+            switch (SYSTEM.sc.firmwareType)
+            {
+                case SystemConfig.FIRMWARE.beta:
+                    version = SYSTEM.firmwareBeta;
+                    break;
+
+                case SystemConfig.FIRMWARE.hailzd:
+                    version = SYSTEM.firmwareHailzd;
+                    break;
+
+            }
+            return version;
         }
 
         public static bool IsLatest(string version)
         {
-            if (!SYSTEM.firmwareChecked) CheckFirmware();
-            if (IsBeta(version) )
-            {
-                return version == SYSTEM.firmwareBeta;
-            }
-            return version == (IsBeta(version) ? SYSTEM.firmwareBeta : SYSTEM.firmwareRelease);
+            return (version.Equals(LatestVersion()));
         }
-
 
         public static void SaveSystemConfig()
         {

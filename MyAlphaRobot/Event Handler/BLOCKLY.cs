@@ -80,6 +80,21 @@ namespace MyAlphaRobot
                 public const string PARM_LEVEL = "battery_level";
             }
 
+            public static class SONIC
+            {
+                public const string KEY = "cond_sonic_distance";
+                public const string PARM_DEVICE_ID = "device_id";
+                public const string PARM_DISTANCE_CHECK = "distance_check";
+                public const string PARM_DISTANCE_VALUE = "distance_value";
+            }
+
+            public static class MAZE
+            {
+                public const string KEY = "cond_maze";
+                public const string PARM_ACTION = "action";
+            }
+
+
             public const byte SIZE = 6;
             public static class OFFSET
             {
@@ -151,13 +166,20 @@ namespace MyAlphaRobot
                 public const string PARM_SYSTEM_ACTION_ID = "system_action_id";
             }
 
+            public static class SONIC
+            {
+                public const string KEY = "action_sonic";
+                public const string PARM_SONIC_STATUS = "sonic_status";
+
+            }
+
             public static class SERVO
             {
                 public const string KEY = "action_servo";
                 public const string PARM_SERVO_IO = "servo_id";
                 public const string PARM_ACTION_ANGLE = "action_angle";
                 public const string PARM_ACTION_TIME = "action_time";
-}
+            }
 
             public const byte SIZE = 4;
             public static class OFFSET

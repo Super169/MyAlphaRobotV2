@@ -13,7 +13,7 @@ namespace MyAlphaRobot
         {
             public enum TYPE : byte
             {
-                play_action = 1, stop_action = 2, head_led = 3, mp3_play_mp3 = 4, mp3_play_file = 5, mp3_stop = 6, gpio = 7, system_action = 8, servo = 9
+                play_action = 1, stop_action = 2, head_led = 3, mp3_play_mp3 = 4, mp3_play_file = 5, mp3_stop = 6, gpio = 7, system_action = 8, servo = 9, sonic = 10
             }
 
             public bool isReady = false;
@@ -56,6 +56,8 @@ namespace MyAlphaRobot
                     case BLOCKLY.ACTION.SERVO.KEY:
                         return new ActionServo(node);
 
+                    case BLOCKLY.ACTION.SONIC.KEY:
+                        return new ActionSonic(node);
                 }
                 return null;
             }
@@ -91,6 +93,9 @@ namespace MyAlphaRobot
 
                     case (byte)TYPE.servo:
                         return new ActionServo(data, offset);
+
+                    case (byte)TYPE.sonic:
+                        return new ActionSonic(data, offset);
 
                 }
                 return null;
@@ -548,8 +553,55 @@ namespace MyAlphaRobot
             }
         }
 
+        public class ActionSonic : Action
+        {
+            public override TYPE Id() { return TYPE.sonic; }
+            public byte sonic_status;
 
+            public ActionSonic(XmlNode node)
+            {
+                try
+                {
+                    sonic_status = byte.Parse(GetFieldValue(node, BLOCKLY.ACTION.SONIC.PARM_SONIC_STATUS));
+                    isReady = true;
+                }
+                catch
+                {
+                }
+            }
 
+            public ActionSonic(byte[] data, int offset)
+            {
+                sonic_status = data[offset + BLOCKLY.ACTION.OFFSET.PARM_1];
+                isReady = true;
+            }
+
+            public override string ToString()
+            {
+                if (!isReady) return "Turn Sonic sensor ?";
+                return string.Format("Turn Sonic sensor {0}", (sonic_status == 1 ? "ON" : "OFF"));
+            }
+
+            public override XmlElement ToXml(XmlDocument root)
+            {
+                XmlElement evtAction = GetXmlAction(root);
+                XmlElement block = GetXmlBlock(root, BLOCKLY.ACTION.SONIC.KEY);
+                if (isReady)
+                {
+                    block.AppendChild(GetXmlField(root, BLOCKLY.ACTION.SONIC.PARM_SONIC_STATUS, sonic_status.ToString()));
+                }
+                evtAction.AppendChild(block);
+                return evtAction;
+            }
+
+            public override byte[] ToBytes()
+            {
+                byte[] data = new byte[BLOCKLY.ACTION.SIZE];
+                data[BLOCKLY.ACTION.OFFSET.TYPE] = (byte)this.Id();
+                data[BLOCKLY.ACTION.OFFSET.PARM_1] = sonic_status;
+                return data;
+            }
+        }
 
     }
 }

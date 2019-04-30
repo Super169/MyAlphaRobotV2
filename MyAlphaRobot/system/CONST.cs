@@ -12,31 +12,23 @@ namespace MyAlphaRobot
 
         public static class DISTRIBUTION
         {
-            public static class PC
-            {
-                public static class BETA
-                {
-                    public static string VERSION = "";
-                    public static string PATH = "";
-                }
-                public static class RELEASE
-                {
-                    public static string VERSION = "";
-                    public static string PATH = "";
-                }
-            }
 
             public static class FIRMWARE
             {
+                public static class RELEASE
+                {
+                    public static string VERSION = "https://raw.githubusercontent.com/Super169/RobotControl.Distribution/master/release";
+                    public static string PATH = "https://github.com/Super169/RobotControl.Distribution/raw/master/Firmware/release/";
+                }
                 public static class BETA
                 {
                     public static string VERSION = "https://raw.githubusercontent.com/Super169/RobotControl.Distribution/master/beta";
                     public static string PATH = "https://github.com/Super169/RobotControl.Distribution/raw/master/Firmware/beta/";
                 }
-                public static class RELEASE
+                public static class HAILZD
                 {
-                    public static string VERSION = "https://raw.githubusercontent.com/Super169/RobotControl.Distribution/master/release";
-                    public static string PATH = "https://github.com/Super169/RobotControl.Distribution/raw/master/Firmware/release/";
+                    public static string VERSION = "https://raw.githubusercontent.com/Super169/RobotControl.Distribution/master/hailzd";
+                    public static string PATH = "https://github.com/Super169/RobotControl.Distribution/raw/master/Firmware/hailzd/";
                 }
             }
         }
@@ -48,15 +40,17 @@ namespace MyAlphaRobot
         public static class DEFAULT_CONFIG
         {
             public static string ROBOT_CONFIG_FILE = "robot.jaz";
-            public static string BLOCKLY_PATH = "";
+            public static string BLOCKLY_PATH = "Blockly";
             public static bool AUTO_CHECK_VERSION = false;
             public static bool AUTO_CHECK_FIRMWARE = false;
+            public static byte WAIT_REBOOT_SEC = 15;
             public static bool DISABLE_BATTERY_UPDATE = false;
             public static bool DISABLE_MPU_UPDATE = false;
             public static bool DEVEOPER_MODE = false;
         }
         public static string ROBOT_CONFIG_FILTER = "Robot Config|*.jaz";
         public static string ROBOT_ACTION_FILTER = "Robot Action|*.myAct";
+        public static string ROBOT_CSV_FILTER = "Robot CSV|*.csv";
         public static string IMAGE_FILTER = "JPG, PNG|*.jpg, *.png|AL (*.*)|*.*";
 
         public static int MAX_SERVO = 32;

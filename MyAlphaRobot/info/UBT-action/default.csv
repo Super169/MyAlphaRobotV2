@@ -1,0 +1,4 @@
+01-default-01
+16, 1, 1000, 65535
+Seq, Enabled, Servo time, Wait time, 1:Angle, 2:Angle, 3:Angle, 4:Angle, 5:Angle, 6:Angle, 7:Angle, 8:Angle, 9:Angle, 10:Angle, 11:Angle, 12:Angle, 13:Angle, 14:Angle, 15:Angle, 16:Angle, 1:LED, 2:LED, 3:LED, 4:LED, 5:LED, 6:LED, 7:LED, 8:LED, 9:LED, 10:LED, 11:LED, 12:LED, 13:LED, 14:LED, 15:LED, 16:LED, Head LED, MP3 folder, MP3 file, MP3 volume
+0, 1, 1000, 1000, 90, 90, 90, 90, 90, 90, 90, 60, 76, 110, 90, 90, 120, 104, 70, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255 

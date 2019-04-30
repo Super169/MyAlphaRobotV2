@@ -525,6 +525,137 @@
         <field name="HUE">90</field>
       </block>
     </value>
+  </block><block type="factory_base" id="2]n26eSd7xK4=/Bs*xHo" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"></mutation>
+    <field name="NAME">cond_sonic_distance</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="w%d=@T+LENHFkpilOas_">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="#4XIuFm^THR6(ADMgi)-">
+            <field name="TEXT">超声波测距</field>
+            <next>
+              <block type="field_dropdown" id="}p70=SA}jCo250O2-hhW">
+                <mutation options="[&quot;text&quot;,&quot;text&quot;,&quot;text&quot;,&quot;text&quot;]"></mutation>
+                <field name="FIELDNAME">devId</field>
+                <field name="USER0">0</field>
+                <field name="CPU0">0</field>
+                <field name="USER1">1</field>
+                <field name="CPU1">1</field>
+                <field name="USER2">2</field>
+                <field name="CPU2">2</field>
+                <field name="USER3">3</field>
+                <field name="CPU3">3</field>
+                <next>
+                  <block type="field_static" id="JnHg#)DVIxC/X41AWNoC">
+                    <field name="TEXT">距离</field>
+                    <next>
+                      <block type="field_dropdown" id="*M;hwp;=lb|VrQIN+U^e">
+                        <mutation options="[&quot;text&quot;,&quot;text&quot;]"></mutation>
+                        <field name="FIELDNAME">distance_check</field>
+                        <field name="USER0">大於</field>
+                        <field name="CPU0">2</field>
+                        <field name="USER1">小於</field>
+                        <field name="CPU1">3</field>
+                        <next>
+                          <block type="field_number" id="=nkm}rG:%Fi5Kt#%HFZK">
+                            <field name="VALUE">0</field>
+                            <field name="FIELDNAME">distance_value</field>
+                            <field name="MIN">0</field>
+                            <field name="MAX">10000</field>
+                            <field name="PRECISION">0</field>
+                            <next>
+                              <block type="field_static" id="%$*Wj^cX|yT]P418@*ry">
+                                <field name="TEXT">cm</field>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="y)Ej]x!@HP%AqI_VCu;b" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="_WTq8YH(6w8(aJYFhW6I" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="^6.zX8/s1mKU;):pFmz#"></shadow>
+      <block type="type_other" id="eT2s~,i|98M[JF5F6$5r">
+        <field name="TYPE">CONDITION</field>
+      </block>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="U.Ttd^C_%N!=`/c$o=R$">
+        <mutation colour="#80a55b"></mutation>
+        <field name="HUE">90</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="Ey}:;3NB=TrSs7]6@qb2" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"></mutation>
+    <field name="NAME">cond_maze</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="WPWlG#YB{m?HZpiUoeJT">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="D]Qx:BUY3f:WWBEh21?V">
+            <field name="TEXT">迷宫导航 指示为</field>
+            <next>
+              <block type="field_dropdown" id="W/Dt3mBh|MLfA^m/rbj9">
+                <mutation options="[&quot;text&quot;,&quot;text&quot;,&quot;text&quot;,&quot;text&quot;]"></mutation>
+                <field name="FIELDNAME">action</field>
+                <field name="USER0">向前走</field>
+                <field name="CPU0">0</field>
+                <field name="USER1">向左走</field>
+                <field name="CPU1">1</field>
+                <field name="USER2">向右走</field>
+                <field name="CPU2">2</field>
+                <field name="USER3">回头</field>
+                <field name="CPU3">3</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="I6Tn{E)Gz|?a{MSPaKSV" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="e;w*S`*L7C/?HK{)cmVR" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="11qh:F#LRxeK?8OU;vQT"></shadow>
+      <block type="type_other" id="LMmS5CqU{hxUs9.kRqy5">
+        <field name="TYPE">CONDITION</field>
+      </block>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id=",R}5?1mt8Qg5RZ/pcZ8^">
+        <mutation colour="#80a55b"></mutation>
+        <field name="HUE">90</field>
+      </block>
+    </value>
   </block><block type="factory_base" id="F(0-r[]0wuEX35B1qseN" deletable="false" movable="false" x="10" y="10">
     <mutation connections="LEFT"></mutation>
     <field name="NAME">action_play_action</field>
@@ -939,6 +1070,53 @@
     </value>
     <value name="COLOUR">
       <block type="colour_hue" id="A`1Y2qb6E}e=/G*n2PF)">
+        <mutation colour="#a55b5b"></mutation>
+        <field name="HUE">0</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="U*oQg9T;CAh4XCH1?WSP" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"></mutation>
+    <field name="NAME">action_sonic</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="DVLLvxX7JxO3yTlGnK7c">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_dropdown" id="V/q5z!m60/}%1JZSstZe">
+            <mutation options="[&quot;text&quot;,&quot;text&quot;]"></mutation>
+            <field name="FIELDNAME">sonic_status</field>
+            <field name="USER0">啟用</field>
+            <field name="CPU0">1</field>
+            <field name="USER1">停止</field>
+            <field name="CPU1">0</field>
+            <next>
+              <block type="field_static" id="=aShLCByMKHSvw(vL+98">
+                <field name="TEXT">超聲波測距</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id=".:d@mTS`@49oqcz7kbre" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="Caqc9l8oPDn%ok;m}NUs" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="R04YT~mV!QC7.;e#IQ[q"></shadow>
+      <block type="type_other" id="0#+S=mtT^4*l6~:czCTE">
+        <field name="TYPE">ACTION</field>
+      </block>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="GN3A|Dog943G,2E]szr(">
         <mutation colour="#a55b5b"></mutation>
         <field name="HUE">0</field>
       </block>

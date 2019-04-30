@@ -26,7 +26,7 @@
 
                     <GridViewColumn Header="序号" Width="40" DisplayMemberBinding="{Binding poseId}"/>
 
-                    <GridViewColumn Header="执行时间" Width="60" >
+                    <GridViewColumn Header="动作时间" Width="60" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding servoTime}" TextAlignment="Right" />
@@ -34,7 +34,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="完成(ms)" Width="60" >
+                    <GridViewColumn Header="帧时(ms)" Width="60" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding waitTime}" TextAlignment="Right" />

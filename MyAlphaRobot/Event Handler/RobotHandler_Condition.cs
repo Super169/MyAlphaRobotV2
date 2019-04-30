@@ -13,7 +13,7 @@ namespace MyAlphaRobot
         {
             public enum TYPE : byte
             {
-                mpu6050 = 1, touch = 2, psx_button = 3, battery = 4, gpio = 5
+                mpu6050 = 1, touch = 2, psx_button = 3, battery = 4, sonic = 5, maze = 6, gpio = 99
             }
 
             public bool isReady = false;
@@ -44,6 +44,12 @@ namespace MyAlphaRobot
                     case BLOCKLY.COND.BATTERY_LEVEL.KEY:
                         return new CondBattery(node, false);
 
+                    case BLOCKLY.COND.SONIC.KEY:
+                        return new CondSonic(node);
+
+                    case BLOCKLY.COND.MAZE.KEY:
+                        return new CondMaze(node);
+
                     case BLOCKLY.COND.GPIO.KEY:
                         return new CondGpio(node);
                 }
@@ -69,13 +75,12 @@ namespace MyAlphaRobot
                     case (byte)TYPE.battery:
                         return new CondBattery(data, offset);
 
-                    /*
-                    case (byte)TYPE.battery_reading:
-                        return new CondBatteryReading(data, offset);
+                    case (byte)TYPE.sonic:
+                        return new CondSonic(data, offset);
 
-                    case (byte)TYPE.battery_level:
-                        return new CondBatteryLevel(data, offset);
-                    */
+                    case (byte)TYPE.maze:
+                        return new CondMaze(data, offset);
+
                     case (byte)TYPE.gpio:
                         return new CondGpio(data, offset);
                 }
@@ -336,42 +341,48 @@ namespace MyAlphaRobot
             }
         }
 
-
-        /*
-        public class CondBatteryReading : Condition
+        public class CondSonic : Condition
         {
-            public override TYPE Id() { return TYPE.battery_reading; }
-            public UInt16 batteryReading;
+            public override TYPE Id() { return TYPE.sonic; }
+            public byte deviceId;
+            public byte distanceCheck;
+            public Int16 distanceValue;
 
-            public CondBatteryReading(XmlNode node)
+            public CondSonic(XmlNode node)
             {
                 try
                 {
-                    batteryReading = UInt16.Parse(GetFieldValue(node, BLOCKLY.COND.BATTERY_READING.PARM_READING));
+                    deviceId = byte.Parse(GetFieldValue(node, BLOCKLY.COND.SONIC.PARM_DEVICE_ID));
+                    distanceCheck = byte.Parse(GetFieldValue(node, BLOCKLY.COND.SONIC.PARM_DISTANCE_CHECK));
+                    distanceValue = Int16.Parse(GetFieldValue(node, BLOCKLY.COND.SONIC.PARM_DISTANCE_VALUE));
                     isReady = true;
                 }
                 catch { }
             }
 
-            public CondBatteryReading(byte[] data, int offset)
+            public CondSonic(byte[] data, int offset)
             {
-                batteryReading = data[offset + BLOCKLY.COND.OFFSET.VALUE];
+                deviceId = data[offset + BLOCKLY.COND.OFFSET.ID];
+                distanceCheck = data[offset + BLOCKLY.COND.OFFSET.CHECK];
+                distanceValue = BitConverter.ToInt16(data, offset + BLOCKLY.COND.OFFSET.VALUE);
                 isReady = true;
             }
 
             public override string ToString()
             {
-                if (!isReady) return "Battery Reading: ?";
-                return string.Format("Battery Reading: {0}", batteryReading);
+                if (!isReady) return "SONIC: ?";
+                return string.Format("SONIC[{0}]: {1},{2}", deviceId, distanceCheck, distanceValue);
             }
 
             public override XmlElement ToXml(XmlDocument root)
             {
                 XmlElement evtCond = GetXmlCondition(root);
-                XmlElement block = GetXmlBlock(root, BLOCKLY.COND.BATTERY_READING.KEY);
+                XmlElement block = GetXmlBlock(root, BLOCKLY.COND.SONIC.KEY);
                 if (isReady)
                 {
-                    block.AppendChild(GetXmlField(root, BLOCKLY.COND.BATTERY_READING.PARM_READING, batteryReading.ToString()));
+                    block.AppendChild(GetXmlField(root, BLOCKLY.COND.SONIC.PARM_DEVICE_ID, deviceId.ToString()));
+                    block.AppendChild(GetXmlField(root, BLOCKLY.COND.SONIC.PARM_DISTANCE_CHECK, distanceCheck.ToString()));
+                    block.AppendChild(GetXmlField(root, BLOCKLY.COND.SONIC.PARM_DISTANCE_VALUE, distanceValue.ToString()));
                 }
                 evtCond.AppendChild(block);
                 return evtCond;
@@ -381,10 +392,10 @@ namespace MyAlphaRobot
             {
                 byte[] data = new byte[BLOCKLY.COND.SIZE];
                 data[BLOCKLY.COND.OFFSET.DEVICE] = (byte)this.Id();
-                data[BLOCKLY.COND.OFFSET.ID] = 0;
+                data[BLOCKLY.COND.OFFSET.ID] = deviceId;
                 data[BLOCKLY.COND.OFFSET.TARGET] = 0;
-                data[BLOCKLY.COND.OFFSET.CHECK] = BLOCKLY.COND.CHECK_MODE.LESS;
-                byte[] value = BitConverter.GetBytes(batteryReading);
+                data[BLOCKLY.COND.OFFSET.CHECK] = distanceCheck;
+                byte[] value = BitConverter.GetBytes(distanceValue);
                 data[BLOCKLY.COND.OFFSET.VALUE] = value[0];
                 data[BLOCKLY.COND.OFFSET.VALUE + 1] = value[1];
                 return data;
@@ -392,41 +403,42 @@ namespace MyAlphaRobot
 
         }
 
-        public class CondBatteryLevel : Condition
-        {
-            public override TYPE Id() { return TYPE.battery_level; }
-            public byte batteryLevel;
 
-            public CondBatteryLevel(XmlNode node)
+        public class CondMaze : Condition
+        {
+            public override TYPE Id() { return TYPE.maze; }
+
+            public byte action;
+
+            public CondMaze(XmlNode node)
             {
                 try
                 {
-                    batteryLevel = byte.Parse(GetFieldValue(node, BLOCKLY.COND.BATTERY_LEVEL.PARM_LEVEL));
+                    action = byte.Parse(GetFieldValue(node, BLOCKLY.COND.MAZE.PARM_ACTION));
                     isReady = true;
                 }
                 catch { }
-
             }
 
-            public CondBatteryLevel(byte[] data, int offset)
+            public CondMaze(byte[] data, int offset)
             {
-                batteryLevel = data[offset + BLOCKLY.COND.OFFSET.VALUE];
+                action = data[offset + BLOCKLY.COND.OFFSET.VALUE];
                 isReady = true;
             }
 
             public override string ToString()
             {
-                if (!isReady) return "Battery Level: ?";
-                return string.Format("Battery Level: {0}", batteryLevel);
+                if (!isReady) return "Maze: ?";
+                return string.Format("Maze: {0}", action);
             }
 
             public override XmlElement ToXml(XmlDocument root)
             {
                 XmlElement evtCond = GetXmlCondition(root);
-                XmlElement block = GetXmlBlock(root, BLOCKLY.COND.BATTERY_LEVEL.KEY);
+                XmlElement block = GetXmlBlock(root, BLOCKLY.COND.MAZE.KEY);
                 if (isReady)
                 {
-                    block.AppendChild(GetXmlField(root, BLOCKLY.COND.BATTERY_LEVEL.PARM_LEVEL, batteryLevel.ToString()));
+                    block.AppendChild(GetXmlField(root, BLOCKLY.COND.MAZE.PARM_ACTION, action.ToString()));
                 }
                 evtCond.AppendChild(block);
                 return evtCond;
@@ -438,13 +450,14 @@ namespace MyAlphaRobot
                 data[BLOCKLY.COND.OFFSET.DEVICE] = (byte)this.Id();
                 data[BLOCKLY.COND.OFFSET.ID] = 0;
                 data[BLOCKLY.COND.OFFSET.TARGET] = 0;
-                data[BLOCKLY.COND.OFFSET.CHECK] = BLOCKLY.COND.CHECK_MODE.LESS;
-                data[BLOCKLY.COND.OFFSET.VALUE] = batteryLevel;
+                data[BLOCKLY.COND.OFFSET.CHECK] = BLOCKLY.COND.CHECK_MODE.MATCH;
+                data[BLOCKLY.COND.OFFSET.VALUE] = action;
                 data[BLOCKLY.COND.OFFSET.VALUE + 1] = 0;
                 return data;
             }
         }
-        */
+
+
 
         public class CondGpio : Condition
         {

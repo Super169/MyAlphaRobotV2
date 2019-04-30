@@ -27,5 +27,6 @@ namespace MyAlphaRobot
             InitObjects();
         }
 
+
     }
 }

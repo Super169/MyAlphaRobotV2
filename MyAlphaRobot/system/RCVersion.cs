@@ -11,13 +11,18 @@ namespace MyAlphaRobot
         public static class TargetVersion
         {
             public const byte major = 2;
-            public const byte minor = 1;
-            public const byte build = 99;
-            public const byte fix = 10;
+            public const byte minor = 2;
+            public const byte build = 1;
+            public const byte fix = 6;
 
             public static long GetSeq()
             {
                 return major * 1000000 + minor * 10000 + build * 100 + fix;
+            }
+
+            public static string GetCode()
+            {
+                return string.Format("{0}.{1}.{2}.{3}", major, minor, build, fix);
             }
         }
 
@@ -49,11 +54,6 @@ namespace MyAlphaRobot
             return string.Format("{0}.{1}.{2}.{3}", major, minor, build, fix);
         }
 
-        public static bool IsBeta()
-        {
-            if (!ready) return false;
-            return (build == 99);
-        }
     }
 
 

@@ -31,6 +31,12 @@
  *     - battery_reading
  *   - cond_batteey_level
  *     - batter_level
+ *   - cond_sonic_distance
+ *     - devId
+ *     - distance_check
+ *     - distance_value
+ *   - cond_maze
+ *     - action
  *     
  * - action => [ACTION]
  *   - action_play_action
@@ -44,6 +50,7 @@
  *     - mp3_folder
  *     - mp3_file
  *   - action_mp3_stop
+ *   - action_sonic
  *     
  *     
 */
@@ -148,7 +155,7 @@ Blockly.Blocks['cond_psx_button'] = {
             .appendField(new Blockly.FieldDropdown([["L1", "FFFB"], ["L2", "FFFE"], ["R1", "FFF7"], ["R2", "FFFD"],
             ["Δ", "FFEF"], ["Х", "FFBF"], ["Ο", "FFDF"], ["□", "FF7F"],
             ["▲", "EFFF"], ["▼", "BFFF"], ["◄", "7FFF"], ["►", "DFFF"],
-            ["SELECT", "FEFF"], ["START", "F7FF"],]), "psx_button")
+            ["SELECT", "FEFF"], ["START", "F7FF"]]), "psx_button")
             .appendField("按下");
         this.setInputsInline(true);
         this.setOutput(true, "CONDITION");
@@ -209,7 +216,33 @@ Blockly.Blocks['cond_battery_level'] = {
     }
 };
 
+Blockly.Blocks['cond_sonic_distance'] = {
+    init: function () {
+        this.appendDummyInput()
+            .appendField("超声波测距")
+            .appendField(new Blockly.FieldDropdown([["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"]]), "device_id")
+            .appendField("距离")
+            .appendField(new Blockly.FieldDropdown([["大於", "2"], ["小於", "3"]]), "distance_check")
+            .appendField(new Blockly.FieldNumber(0, 0, 10000), "distance_value")
+            .appendField("cm");
+        this.setOutput(true, "CONDITION");
+        this.setColour(90);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
 
+Blockly.Blocks['cond_maze'] = {
+    init: function () {
+        this.appendDummyInput()
+            .appendField("迷宫导航 指示为")
+            .appendField(new Blockly.FieldDropdown([["向前走", "0"], ["向左走", "1"], ["向右走", "2"], ["回头", "3"]]), "action");
+        this.setOutput(true, "CONDITION");
+        this.setColour(90);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
 // ---------
 //   Action
 // ---------
@@ -329,3 +362,14 @@ Blockly.Blocks['action_servo'] = {
     }
 };
 
+Blockly.Blocks['action_sonic'] = {
+    init: function () {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdown([["啟用", "1"], ["停止", "0"]]), "sonic_status")
+            .appendField("超聲波測距");
+        this.setOutput(true, "ACTION");
+        this.setColour(0);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};

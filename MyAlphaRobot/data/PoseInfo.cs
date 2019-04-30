@@ -301,6 +301,66 @@ namespace MyAlphaRobot.data
 
         }
 
+        public bool ReadFromCsv(string csv, int actionId, int poseId, byte maxServo)
+        {
+            string[] csvData = csv.Split(',');
+            // Should have 2 * maxServo+ 8 fields
+            // postId, enabled, servoTime, waitTime, {2 * maxServo} servos, headLed, mp3Folder, mp3File, mp3Vol
+            if (csvData.Length != 2 * maxServo + 8) return false;
+            // check if all numeric
+            int[] data = new int[csvData.Length];
+            for (int i = 0; i < csvData.Length; i++)
+            {
+                int value;
+                if (!int.TryParse(csvData[i], out value))
+                {
+                    return false;
+                }
+                data[i] = value;
+            }
+            // if (poseId != data[0]) return false;
+            this.actionId = (byte) actionId;
+            this.poseId = (UInt16) poseId;
+            this.enabled = (data[1] == 1);
+            this.servoTime = (UInt16) data[2];
+            this.waitTime = (UInt16) data[3];
+
+            int idx = 4;
+            int max_servo = Math.Min(maxServo, CONST.MAX_SERVO);
+
+            for (int id = 1; id <= max_servo; id++)
+            {
+                servoAngle[id] = (byte) data[idx++];
+            }
+            idx = 4 + maxServo;
+            for (int id = 1; id <= max_servo; id++)
+            {
+                servoLed[id] = (byte)data[idx++];
+            }
+            // 
+            idx = 4 + 2 * maxServo;
+            headLed = (byte) data[idx++];
+            mp3Folder = (byte)data[idx++];
+            mp3File = (byte)data[idx++];
+            mp3Vol = (byte)data[idx++];
+
+            return true;
+        }
+
+        public bool G2Conv(G2Map map)
+        {
+            for (byte id = 1; id <= 16; id++)
+            {
+                servoAngle[id] = map.Convert(id, servoAngle[id]);
+            }
+            // Special handle for Servo 17 ~ 20
+            for (byte id = 17; id <= CONST.MAX_SERVO; id++)
+            {
+                servoAngle[id] = 255;
+            }
+            return true;
+        }
+
         public byte[] GetData()
         {
             byte[] data = new byte[60];
@@ -334,6 +394,40 @@ namespace MyAlphaRobot.data
             data[CONST.AI.POSE.OFFSET.MP3_VOL] = this.mp3Vol;
             data[59] = 0xED;
             return data;
+        }
+
+        public static string GetCsvHeader()
+        {
+            StringBuilder sb = new StringBuilder();
+            // sb.Append("序号, 启用, 动作时间, 帧时, ");
+            sb.Append("Seq, Enabled, Servo time, Wait time, ");
+            for (int id = 1; id <= CONST.MAX_SERVO; id++)
+            {
+                sb.Append(string.Format("{0}:Angle, ", id));
+            }
+            for (int id = 1; id <= CONST.MAX_SERVO; id++)
+            {
+                sb.Append(string.Format("{0}:LED, ", id));
+            }
+            sb.Append("Head LED, MP3 folder, MP3 file, MP3 volume\n");
+            return sb.ToString();
+        }
+
+
+        public string GetCsv()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(string.Format("{0}, {1}, {2}, {3}, ", poseId, (enabled ? 1 : 0),  servoTime, waitTime));
+            for (int id = 1; id <= CONST.MAX_SERVO; id++)
+            {
+                sb.Append(string.Format("{0}, ", servoAngle[id]));
+            }
+            for (int id = 1; id <= CONST.MAX_SERVO; id++)
+            {
+                sb.Append(string.Format("{0}, ", servoLed[id]));
+            }
+            sb.Append(string.Format("{0}, {1}, {2}, {3} \n", headLed, mp3Folder, mp3File, mp3Vol));
+            return sb.ToString();
         }
 
         public bool ReadFromArray(byte[] data, int actionId, int poseId, int offset = 0)

@@ -14,13 +14,10 @@ namespace MyAlphaRobot
 
         public static SystemConfig sc { get; set; }
 
-        public static bool versionChecked { get; set; }
-        public static string versionBeta { get; set; }
-        public static string versionRelease { get; set; }
-
         public static bool firmwareChecked { get; set; }
         public static string firmwareBeta { get; set; }
         public static string firmwareRelease { get; set; }
+        public static string firmwareHailzd { get; set; }
 
         public static ConfigObject configObject { get; set; }
 

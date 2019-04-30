@@ -146,7 +146,8 @@
                                                             <CheckBox x:Name="cbxActiveSelected" Content="选取" HorizontalAlignment="Left" Margin="150,5,0,0" VerticalAlignment="Top" Checked="cbxActiveSelected_Changed" Unchecked="cbxActiveSelected_Changed"/>
                                                             <CheckBox x:Name="cbxActiveLocked" Content="锁上" HorizontalAlignment="Left" Margin="210,5,0,0" VerticalAlignment="Top" Checked="cbxActiveLocked_Changed" Unchecked="cbxActiveLocked_Changed"/>
                                                             <Slider x:Name="sliderActiveAngle" HorizontalAlignment="Left" Margin="17,30,0,0" VerticalAlignment="Top" Width="240" Minimum="0" Maximum="240" ValueChanged="sliderActiveAngle_ValueChanged" GotMouseCapture="sliderActiveAngle_GotMouseCapture" LostMouseCapture="sliderActiveAngle_LostMouseCapture" />
-                                                            <Label x:Name="lblAngle" Content="0" HorizontalAlignment="Left" Margin="257,22,0,0" VerticalAlignment="Top" Width="33" />
+                                                            <TextBox x:Name="tbAngle" HorizontalAlignment="Left" Height="23" Margin="257,22,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="30" MaxLength="3" PreviewTextInput="tb_PreviewInteger" KeyUp="tbAngle_KeyUp" LostFocus="tbAngle_LostFocus" />
+
                                                             <Label x:Name="lblLed" Content="LED 设定:" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
                                                             <RadioButton x:Name="rbLedNoChange" Content="不变" HorizontalAlignment="Left" Margin="80,56,0,0" VerticalAlignment="Top" Click="rbLed_Clicked"/>
                                                             <RadioButton x:Name="rbLedTurnOn" Content="点亮" HorizontalAlignment="Left" Margin="140,56,0,0" VerticalAlignment="Top" Click="rbLed_Clicked" />
@@ -172,17 +173,18 @@
                                                                 <TextBox x:Name="tbMp3Folder" HorizontalAlignment="Left" Height="23" Margin="46,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="43" MaxLength="3" PreviewTextInput="tb_PreviewInteger" />
                                                                 <Label x:Name="lblPlayFile" Content="\" HorizontalAlignment="Left" Margin="90,0,0,0" VerticalAlignment="Top"/>
                                                                 <TextBox x:Name="tbMp3File" HorizontalAlignment="Left" Height="23" Margin="107,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="50" MaxLength="3" PreviewTextInput="tb_PreviewInteger" />
-                                                                <Label x:Name="lblPlayVol" Content="音量:" HorizontalAlignment="Left" Margin="170,0,0,0" VerticalAlignment="Top" Width="35"/>
-                                                                <TextBox x:Name="tbMp3Vol" HorizontalAlignment="Left" Height="23" Margin="210,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="50" MaxLength="2" PreviewTextInput="tb_PreviewInteger" />
+                                                                <Label x:Name="lblPlayVol" Content="音量:" HorizontalAlignment="Left" Margin="190,0,0,0" VerticalAlignment="Top" Width="35"/>
+                                                                <TextBox x:Name="tbMp3Vol" HorizontalAlignment="Left" Height="23" Margin="230,2,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="50" MaxLength="2" PreviewTextInput="tb_PreviewInteger" />
                                                                 <CheckBox x:Name="cbxStopMp3" Content="停止播放" HorizontalAlignment="Left" Margin="15,30,0,0" VerticalAlignment="Top" Checked="cbxStopMp3_Changed" Unchecked="cbxStopMp3_Changed"/>
-                                                                <Button x:Name="btnMp3Test" Content="测试" HorizontalAlignment="Left" Margin="149,33,0,0" VerticalAlignment="Top" Width="56" Click="btnMp3Test_Click"/>
-                                                                <Button x:Name="btnMp3Stop" Content="停止" HorizontalAlignment="Left" Margin="210,33,0,0" VerticalAlignment="Top" Width="50" Click="btnMp3Stop_Click"/>
+                                                                <Button x:Name="btnMp3Default" Content="预设音效" HorizontalAlignment="Left" Margin="110,33,0,0" VerticalAlignment="Top" Width="56" Click="btnMp3Default_Click"/>
+                                                                <Button x:Name="btnMp3Test" Content="测试" HorizontalAlignment="Left" Margin="170,33,0,0" VerticalAlignment="Top" Width="56" Click="btnMp3Test_Click"/>
+                                                                <Button x:Name="btnMp3Stop" Content="停止" HorizontalAlignment="Left" Margin="230,33,0,0" VerticalAlignment="Top" Width="50" Click="btnMp3Stop_Click"/>
                                                             </Grid>
                                                             <Grid Height="30">
-                                                                <Label x:Name="lblExecTime" Content="执行时间:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                                                                <TextBox x:Name="tbExecTime" HorizontalAlignment="Left" Height="23" Margin="70,0,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Width="50" MaxLength="5" PreviewTextInput="tb_PreviewInteger" />
-                                                                <Label x:Name="lblWaitTime" Content="等待时间:" HorizontalAlignment="Left" Margin="145,0,0,0" VerticalAlignment="Center"/>
-                                                                <TextBox x:Name="tbWaitTime" HorizontalAlignment="Left" Height="23" Margin="210,0,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Width="50" MaxLength="5" PreviewTextInput="tb_PreviewInteger"/>
+                                                                <Label x:Name="lblExecTime" Content="动作时间:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                                                <TextBox x:Name="tbExecTime" HorizontalAlignment="Left" Height="23" Margin="70,0,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Width="50" MaxLength="5" PreviewTextInput="tb_PreviewInteger"  TextChanged="tbExecTime_changed"/>
+                                                                <Label x:Name="lblWaitTime" Content="帧时长:" HorizontalAlignment="Left" Margin="175,0,0,0" VerticalAlignment="Center"/>
+                                                                <TextBox x:Name="tbWaitTime" HorizontalAlignment="Left" Height="23" Margin="230,0,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Width="50" MaxLength="5" PreviewTextInput="tb_PreviewInteger"/>
                                                             </Grid>
                                                         </StackPanel>
                                                     </Grid>
@@ -215,6 +217,11 @@
                     <Button x:Name="btnLoadConfig" Content="读取动作" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="70" Click="btnLoadConfig_Click"/>
                     <Button x:Name="btnSaveConfig" Content="储存动作" HorizontalAlignment="Left" Margin="80,5,0,0" VerticalAlignment="Top" Width="70" Click="btnSaveConfig_Click"/>
                     <Button x:Name="btnDownloadConfig" Content="重新下载" HorizontalAlignment="Left" Margin="160,5,0,0" VerticalAlignment="Top" Width="70" Click="btnDownloadConfig_Click" Grid.RowSpan="2"/>
+                </Grid>
+                <Grid Grid.Column="1" >
+                    <Button x:Name="btnLoadCsv" Content="读取CSV" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="70" Click="btnLoadCsv_Click"/>
+                    <Button x:Name="btnSaveCsv" Content="储存CSV" HorizontalAlignment="Left" Margin="80,5,0,0" VerticalAlignment="Top" Width="70" Click="btnSaveCsv_Click"/>
+                    <Button x:Name="btnG2Conv" Content="二代转换" HorizontalAlignment="Left" Margin="160,5,0,0" VerticalAlignment="Top" Width="70" Click="btnG2Conv_Click"/>
                 </Grid>
                 <Grid Grid.Column="2">
                     <Button x:Name="btnConvertAction" Content="读取优必选动作" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="100" Click="btnConvertAction_Click" Grid.Column="1" Grid.RowSpan="2"/>

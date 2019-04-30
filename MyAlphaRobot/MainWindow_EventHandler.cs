@@ -70,14 +70,16 @@ namespace MyAlphaRobot
             if (SYSTEM.sc.disableBatteryUpdate)
             {
                 ClearBattery();
-            } else
+            }
+            else
             {
                 UpdateBattery();
             }
             if (SYSTEM.sc.disableMpuUpdate)
             {
                 ClearMpu();
-            } else
+            }
+            else
             {
                 UpdateMpu();
             }
@@ -118,6 +120,11 @@ namespace MyAlphaRobot
         #endregion
 
 
+        private void tbExecTime_changed(object sender, TextChangedEventArgs e)
+        {
+            tbWaitTime.Text = tbExecTime.Text;
+        }
+
         #region Button Event Handler
 
         private void btnSerialConnect_Click(object sender, RoutedEventArgs e)
@@ -129,7 +136,7 @@ namespace MyAlphaRobot
         {
             bool ready = false;
             string ip = txtIP.Text.Trim();
-            if (ip != "") 
+            if (ip != "")
             {
                 if (ip.Split(new[] { "." }, StringSplitOptions.None).Count() == 4)
                 {
@@ -234,6 +241,15 @@ namespace MyAlphaRobot
             if (activeServo > 0) UpdateActiveServoInfo();
         }
 
+        private void btnMp3Default_Click(object sender, RoutedEventArgs e)
+        {
+            int aid = ucActionList.GetSelectedActionId();
+            if (aid > 0)
+            {
+                tbMp3Folder.Text = "01";
+                tbMp3File.Text = string.Format("{0:D3}", aid);
+            }
+        }
 
         private void btnMp3Test_Click(object sender, RoutedEventArgs e)
         {
@@ -253,7 +269,17 @@ namespace MyAlphaRobot
                 Thread.Sleep(100);
             }
             UBT.V2_MP3PlayFile(folderSeq, fileSeq);
-            UpdateInfo(String.Format("播放 {0}档案 {1:0000}", (folderSeq == 0xFF ? "" : string.Format("{0:0000} 目录下的", folderSeq)), fileSeq));
+            string msg;
+            if (folderSeq == 0xFF)
+            {
+                msg = String.Format("播放 SD 卡的第 {0} 个档案", fileSeq);
+            }
+            else
+            {
+                msg = String.Format("播放 {0:00} 目录下的档案 {1:000}*.mp3", folderSeq, fileSeq);
+            }
+            if (playVol != 255) msg += string.Format(", 并设定音量为 {0}", playVol);
+            UpdateInfo(msg);
         }
 
         private void btnMp3Stop_Click(object sender, RoutedEventArgs e)
@@ -335,6 +361,24 @@ namespace MyAlphaRobot
         {
             UpdateInfo();
             SaveActionFile();
+        }
+
+        private void btnLoadCsv_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateInfo();
+            LoadActionCsvFile();
+        }
+
+        private void btnSaveCsv_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateInfo();
+            SaveActionCsvFile();
+        }
+
+        private void btnG2Conv_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateInfo();
+            G2Conv();
         }
 
         private void btnDownloadConfig_Click(object sender, RoutedEventArgs e)
@@ -480,7 +524,7 @@ namespace MyAlphaRobot
         private void sliderActiveAngle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Slider sAngle = (Slider)sender;
-            lblAngle.Content = Math.Round(sAngle.Value);
+            tbAngle.Text = Math.Round(sAngle.Value).ToString();
         }
 
         private void sliderActiveAngle_GotMouseCapture(object sender, MouseEventArgs e)
@@ -495,6 +539,33 @@ namespace MyAlphaRobot
         private void sliderActiveAngle_LostMouseCapture(object sender, MouseEventArgs e)
         {
             sliderMode = 1;
+        }
+
+        private void tbAngle_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter) return;
+            UpdateAngle();
+        }
+
+        private void tbAngle_LostFocus(object sender, RoutedEventArgs e)
+        {
+            UpdateAngle();
+        }
+
+        private void UpdateAngle()
+        {
+            if (activeServo > 0)
+            {
+                string sAngle = tbAngle.Text.Trim();
+                int angle;
+                if (!int.TryParse(sAngle, out angle)) return;
+                if ((angle < 0) || (angle > 240))
+                {
+                    UpdateInfo(string.Format("Invalid angle: {0}", angle));
+                }
+                sliderActiveAngle.Value = angle;
+                UBT.MoveServo((byte)activeServo, (byte)angle, 0);
+            }
         }
 
         private void rbLed_Clicked(object sender, RoutedEventArgs e)

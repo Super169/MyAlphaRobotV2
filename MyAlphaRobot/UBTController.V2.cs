@@ -76,12 +76,16 @@ namespace MyAlphaRobot
         {
             byte[] command = { 0xA9, 0x9A, 2, CONST.CMD.SERVOANGLE, 0x00, 0xED };
             //if (!V2_SendCommand(command))
+            // CONST.CB.SERVOANGLE.minBytes = 6 + 2 * ;
+            CONST.CB.SERVOANGLE.minBytes = (Int16) (6 + 2 * config.maxServo);
             if (!SendRobotCommand(command, CONST.CB.SERVOANGLE))
             {
                 UpdateInfo("Fail getting servo angles", MyUtil.UTIL.InfoType.error);
                 return false;
             }
-            for (byte id = 1; id <= CONST.MAX_SERVO; id++)
+            // id cannot exceed maxId of robot or contorller
+            byte maxId = (byte) Math.Min(config.maxServo, SYSTEM.configObject.max_servo);
+            for (byte id = 1; id <= maxId; id++)
             {
                 int pos = 4 + 2 * (id - 1);
                 byte angle = receiveBuffer[pos];
@@ -96,7 +100,6 @@ namespace MyAlphaRobot
                 }
                 RefreshServo(id);
             }
-
             return true;
         }
 
@@ -113,7 +116,7 @@ namespace MyAlphaRobot
                 UpdateInfo(String.Format("Fail getting angle"), MyUtil.UTIL.InfoType.error);
                 return 0xFF;
             }
-            return receiveBuffer[7];
+            return receiveBuffer[5];
         }
 
 

@@ -21,12 +21,14 @@
     <block type="cond_battery_level">
       <field name="battery_level">0</field>
     </block>
-<!--
-    <block type="cond_gpio">
-      <field name="gpio_pin">13</field>
-      <field name="gpio_status">1</field>
+    <block type="cond_sonic_distance">
+      <field name="device_id">0</field>
+      <field name="distance_check">2</field>
+      <field name="distance_value">0</field>
     </block>
--->
+    <block type="cond_maze">
+      <field name="action">0</field>
+    </block>
   </category>
   <category name="动作">
     <block type="action_play_action">
@@ -44,19 +46,16 @@
       <field name="mp3_file">0</field>
     </block>
     <block type="action_mp3_stop"></block>
-<!--
-    <block type="action_gpio">
-      <field name="gpio_pin">15</field>
-      <field name="gpio_status">1</field>
-    </block>
--->
     <block type="action_system_action">
       <field name="system_action_id">1</field>
     </block>
     <block type="action_servo">
       <field name="servo_id">1</field>
-      <field name="action_time">1</field>
+      <field name="action_time">50</field>
       <field name="action_angle">1</field>
+    </block>
+    <block type="action_sonic">
+      <field name="sonic_status">1</field>
     </block>
   </category>
   <category name="预设事件">

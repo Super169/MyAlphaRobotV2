@@ -213,6 +213,51 @@ namespace MyAlphaRobot.data
             return true;
         }
 
+        public bool ReadFromCsv(string[] csv)
+        {
+            this.Reset();
+            this.actionName = csv[0].Trim();
+            if (actionName.Length > 20) actionName = actionName.Substring(0, 20);
+            // Only get MAX_SERVO from line 2 for comparison
+            string[] csvData = csv[1].Split(',');
+            int maxServo = -1;
+            // In general, will not have 255 servo as only 1 byte for ID, and 255 reserved
+            if (!int.TryParse(csvData[0], out maxServo) || (maxServo <= 0) || (maxServo >= 255))
+            {
+                this.Reset();
+                return false;
+            }
+            int poseCnt = csv.Length - 3;
+            SetPoseSize((UInt16)poseCnt);
+            for (int poseId = 0; poseId < poseCnt; poseId++)
+            {
+                if (!pose[poseId].ReadFromCsv(csv[poseId + 3], this.actionId, poseId, (byte) maxServo))
+                {
+                    this.Reset();
+                    return false;
+                }
+            }
+
+            CheckPoses();
+            return true;
+        }
+
+        public bool G2Conv(string[] csv)
+        {
+            G2Map map = new G2Map(csv);
+            if (!map.isReady) return false;
+            for (int poseId = 0; poseId < poseCnt; poseId++)
+            {
+                if (!pose[poseId].G2Conv(map))
+                {
+                    this.Reset();
+                    return false;
+                }
+            }
+            CheckPoses();
+            return true;
+        }
+
         public byte[] GetData()
         {
             byte[] data = new byte[60];
@@ -251,9 +296,32 @@ namespace MyAlphaRobot.data
             return data;
         }
 
+        public string GetCsv()
+        {
+            /*
+             * Row | content
+             *   1 | action Name
+             *   2 | MAX_SERVO, poseCnt, totalTime, relatedServos
+             */
+            StringBuilder sb = new StringBuilder();
+            sb.Append(actionName + "\n");
+            Int32 servos = 0;
+            foreach (byte b in relatedServo)
+            {
+                servos |= (1 << (b - 1));
+            }
+            sb.Append(String.Format("{0}, {1}, {2}, {3}\n", CONST.MAX_SERVO, poseCnt, totalTime, servos));
+            return sb.ToString();
+        }
+
         public byte[] GetPoseData(UInt16 poseId)
         {
             return pose[poseId].GetData();
+        }
+
+        public string GetPoseCsv(UInt16 poseId)
+        {
+            return pose[poseId].GetCsv();
         }
 
         public void SetPoseSize(UInt16 size)
