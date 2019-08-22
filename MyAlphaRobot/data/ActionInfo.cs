@@ -68,7 +68,8 @@ namespace MyAlphaRobot.data
             relatedServoStr = "";
             for (int poseId = 0; poseId < pose.Length; poseId++)
             {
-                if ((pose[poseId].waitTime == 0) && (pose[poseId].servoTime == 0))
+                if ((pose[poseId].waitTime == 0) && (pose[poseId].servoTime == 0) &&
+                    (pose[poseId].mp3Folder == 255) && (pose[poseId].mp3File == 255))
                 {
                     break;
                 }
