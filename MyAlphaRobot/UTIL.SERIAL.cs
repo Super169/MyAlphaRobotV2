@@ -25,7 +25,7 @@ namespace MyAlphaRobot
                     {
                         try
                         {
-                            int portNum = int.Parse(port.Replace("COM", ""));
+                            int portNum = int.Parse(port.Replace("COM", " "));
                             // Try to exculde virtual ports
                             if (portNum >= excludePort) port = "";
                         }
